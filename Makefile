@@ -6,7 +6,7 @@ all: abos abos-run
 abos:
 	mkdir -p bin/
 	$(AS) -f bin -Isrc/boot/ src/boot/abos-boot.asm -o bin/bootsector.bin
-	$(AS) -Isrc/ src/kernel/kernel.asm -o bin/kernel.bin
+	$(AS) -Isrc/kernel/ src/kernel/kernel.asm -o bin/kernel.bin
 
 	cat bin/bootsector.bin bin/kernel.bin > bin/abos.img
 
