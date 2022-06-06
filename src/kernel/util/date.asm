@@ -2,17 +2,17 @@ time:
     ;; Get date from BIOS
     mov ah, 4h
     int 0x1A
-    call xtox
+    call hextohex
     mov ch, cl
-    call xtox
+    call hextohex
     mov al, '-'
     int 0x10
     mov ch, dh
-    call xtox
+    call hextohex
     mov al, '-'
     int 0x10
     mov ch, dl
-    call xtox
+    call hextohex
 
     ;; add an 'at'
     ;; i know its ugly
@@ -30,28 +30,28 @@ time:
     ;; Get time
     mov ah, 2h
     int 1ah
-    call xtox
+    call hextohex
     mov al, `:`
     int 10h
     mov ch, cl
-    call xtox
+    call hextohex
     mov al, `:`
     int 10h
     mov ch, dh
-    call xtox
+    call hextohex
 
     ;; Return back
     ret
 
-xtox:
+hextohex:
     ;; Output CH as hex
     mov al, ch
     and al, 0xf ;; Clear upper 4 bits -- only want 1st digit
-    call xtoasc
+    call hextoascii
     mov ah, al  ;; Store in ah
     mov al, ch
     shr al, 4h  ;; Get 1st digit
-    call xtoasc
+    call hextoascii
     mov ch, ah  ;; Store in CH
     
     ;; Output
@@ -61,11 +61,11 @@ xtox:
     int 10h
     ret
 
-xtoasc:
+hextoascii:
     ;; Hex to ASCII
     add al, 30h
     cmp al, 39h
-    jle xtaback
+    jle hextaback
     add al, 7h
-xtaback:
+hextaback:
     ret
