@@ -4,7 +4,7 @@ PROG_LOC equ 0x8000
 disk_reads:
   mov ah, 0x02
   mov bx, PROG_LOC
-  mov al, 32        ;; 32 sectors to read
+  mov al, 4         ;; 4 sectors to read (qemu goes crazy if too many are given)
   mov dl, [BDK]
   mov ch, 0x00      ;; drive head
   mov dh, 0x00      ;; drive cylinders
