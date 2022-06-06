@@ -22,7 +22,7 @@ input:
     jmp .LPrint
   ;; print out character stored at cl
   .LPrint:
-    ;; test
+    ;; Enter key
     cmp cl, 13  ;; enter key
     je .Enter
     
@@ -40,6 +40,10 @@ input:
     mov al, `\n`
     int 0x10
     
+    mov ah, 0x0e
+    mov al, `\r`
+    int 0x10
+
     ;; go back and loop
     jmp .Loop
 
