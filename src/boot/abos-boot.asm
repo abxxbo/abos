@@ -21,7 +21,7 @@ jmp PROG_LOC
 jmp $
 
 ;; data
-welcome: db `Welcome to abos!\r\n`, 0
+welcome: db `Welcome to abos!\r\nType 'help' for a guide on commands.\r\n\r\n`, 0
 
 ;; includes
 %include "util/read_disk.asm"
