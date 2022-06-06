@@ -1,22 +1,47 @@
 ;; Test to prove in "kernel space"
 
+call input
+
 ;; hang infinently, we don't have much to do
 jmp $
 
 ;;; ---- functions ----
 
 input:
-  xor ax, ax
-  mov ah, 00h
-  int 16h
+  ;; input
+  xor cl, cl
+  .Loop:
+    xor ax, ax
+    mov ah, 00h
+    int 16h
 
-  mov ch, ah
-  mov cl, al
+    mov ch, ah
+    mov cl, al
 
-  mov ah, 0x0e
-  mov al, cl
-  int 0x10
-  jmp input
+    ;; Now we want to print it out
+    jmp .LPrint
+  ;; print out character stored at cl
+  .LPrint:
+    ;; test
+    cmp cl, 13  ;; enter key
+    je .Enter
+    
+    ;; actually print
+    mov ah, 0x0e
+    mov al, cl
+    int 0x10
+    jmp .Loop
+  
+  ;; special keys
+
+  ;; Enter key 
+  .Enter:
+    mov ah, 0x0e
+    mov al, `\n`
+    int 0x10
+    
+    ;; go back and loop
+    jmp .Loop
 
 ;; includes
 %include "util/output.asm"
