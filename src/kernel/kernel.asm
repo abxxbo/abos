@@ -1,3 +1,12 @@
+;; init
+call time
+
+mov ah, 0x0e
+mov al, `\r`
+int 0x10
+mov al, `\n`
+int 0x10
+
 ;; Start up our shell
 call shell
 
