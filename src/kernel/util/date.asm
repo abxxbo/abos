@@ -40,6 +40,11 @@ time:
     mov ch, dh
     call hextohex
 
+    mov ah, 0x0e
+    mov al, `\r`
+    int 0x10
+    mov al, `\n`
+    int 0x10
     ;; Return back
     ret
 
