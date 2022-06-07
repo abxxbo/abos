@@ -253,7 +253,11 @@ letters:
 commands:
   .Help:
     call nline
-    
+
+    ;; print
+    mov si, help0
+    call printk
+
     ;; jump back
     call nline
     jmp shell.RedoPS1
@@ -275,3 +279,6 @@ nline:
   ret
 
 ;; data
+
+;;; help command
+help0: db `help - this message\r\ndate - get current date`, 0

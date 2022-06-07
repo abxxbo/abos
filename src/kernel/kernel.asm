@@ -1,3 +1,4 @@
+[org 0x8000]
 ;; init
 call time
 
