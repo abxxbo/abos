@@ -1,5 +1,5 @@
 BOOTLOADER:
-1. allow user to choose resolution (default is 80x25)
+1. ~~allow user to choose resolution (default is 80x25)~~
 
 KERNEL:
 1. file system implementation
