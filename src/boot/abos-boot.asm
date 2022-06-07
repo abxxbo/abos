@@ -9,6 +9,10 @@ mov al, 0x03      ;; resolution
 mov ah, 0
 int 0x10
 
+;; give a message when in bootloader
+mov bx, welcome_boot
+call printf
+
 ;; change resolution based on what user asks
 mov bx, reset_res0
 call printf
@@ -16,6 +20,10 @@ call printf
 xor ax, ax
 int 16h
 
+mov cl, al
+mov ah, 0x0e
+mov al, cl
+int 0x10
 
 ;; compare
 cmp al, '0'
@@ -49,10 +57,12 @@ start:
 jmp $
 
 ;; data
-welcome: db `Welcome to abos!\r\nType 'help' for a guide on commands.\r\n\r\n`, 0
+welcome: db `Booted into abos!\r\nType 'help' for a guide on commands.\r\n\r\n`, 0
 welcome2: db `I booted on `, 0
 
-reset_res0: db `Choose a resolution\r\n0: 40x25\r\n1: 80x25\r\n2: 132x25\r\nChoice: `, 0
+welcome_boot: db `Welcome to abos. Please select a resolution.\r\n`, 0
+
+reset_res0: db `\r\n0: 40x25\r\n1: 80x25\r\nChoice: `, 0
 reset_res1: db `\r\nUnrecognized resolution. Press any key to reboot and try again.`, 0
 
 ;; includes
