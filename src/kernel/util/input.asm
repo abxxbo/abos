@@ -130,9 +130,6 @@ shell:
     cmp dx, 0x001E
     je commands.Date
 
-    cmp dx, 0x0040
-    je commands.Test
-
     mov ah, 0x0e
     mov al, `\n`
     int 0x10
