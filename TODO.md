@@ -6,7 +6,7 @@ KERNEL:
 2. rewrite shell (very scuffed)
 3. more commands (see below for some that should be added)
   - shut down (requires ACPI, though)
-  - reboot    (easy, far jump to reset vector (0xFFFF:0))
+  - ~~reboot    (easy, far jump to reset vector (0xFFFF:0))~~
 4. text editor
 5. potentially add a login system
 

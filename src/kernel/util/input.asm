@@ -130,6 +130,9 @@ shell:
     cmp dx, 0x001E
     je commands.Date
 
+    cmp dx, 0x004B
+    je commands.Reboot
+
     mov ah, 0x0e
     mov al, `\n`
     int 0x10
@@ -267,6 +270,8 @@ commands:
 
     ;; jmp back
     jmp shell.RedoPS1
+  .Reboot:
+    jmp 0xFFFF:0
 
 nline:
   mov ah, 0x0e
@@ -281,4 +286,4 @@ nline:
 ;; data
 
 ;;; help command
-help0: db `help - this message\r\ndate - get current date`, 0
+help0: db `help - this message\r\ndate - get current date\r\nreboot - restarts computer`, 0
