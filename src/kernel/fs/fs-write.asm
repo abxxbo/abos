@@ -10,23 +10,17 @@
 ;; Write Sectors: Write to a disk sector
 ;; Arguments:
 ;; bh => Number of sectors to write
-;; dh => Sector number
-;; bl => Low 8-bits of cylinder number
-;; sp => buffer to write to disk
+;; bl => Sector number
+;; bx => Buffer to write to disk
 Write_Sectors:
-  mov ah, 0x03
+  mov ah, 03
   mov al, bh
-  mov ch, dh
-  mov dh, 0x00  ;; drive 0 head 0
-  mov dl, 0
-  ;; ES:BX part
-  mov bx, sp
-
+  mov ch, 0
+  mov cl, bl
+  mov dh, 0
+  mov dl, 0x80
+  mov bx, cx
   int 0x13
-
-  ;; Any errors?
-  jnc _errp
-  jc errp
   ret
 
 errp:
@@ -42,19 +36,53 @@ errp:
 
 ;; No error
 _errp:
-  mov bx, errp_no
+  mov bx, YesWrite
   call printf
-  call nline
-  mov ah, 0x01
-  mov dl, 0
-  int 0x13
 
-  movzx bx, ah
+  ;; CL
+  mov bx, YesWriteC
+  call printf
+
+  movzx bx, cl
   call printh_
 
   call nline
-  ret
+
+  ;; AL
+  mov bx, YesWriteA
+  call printf
+
+  movzx bx, al
+  call printh_
+
+  call nline
+
+  ;; ES
+  mov bx, YesWriteE
+  call printf
+
+  mov bx, es
+  call printh_
+
+  call nline
+  ;; BX
+  mov bx, YesWriteB
+  call printf
+
+  mov bx, dx
+  call printh_
+
+  call nline
+
+  ;; go back
+  jmp kstart
 
 ;; DATA
 errp_given: db `Writing to the sector failed.. You dumb?\r\nAH: `, 0
 errp_no:    db `No error returned, hopefully written to disk!\r\n`, 0
+
+YesWrite: db `I wrote sectors! Listing some info!\r\n`, 0
+YesWriteC: db `CL: `, 0
+YesWriteA: db `AL: `, 0
+YesWriteE: db `ES: `, 0
+YesWriteB: db `BX: `, 0

@@ -109,7 +109,7 @@ SuccessRead:
   call nline
 
   ;; go back
-  jmp kstart
+  jmp kstart.shell
 
 ;;; Data
 DRV_N: db 0
