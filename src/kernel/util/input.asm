@@ -127,6 +127,12 @@ shell:
     cmp dx, 0x0029
     je commands.Help
 
+    cmp dx, 0x001E
+    je commands.Date
+
+    cmp dx, 0x0040
+    je commands.Test
+
     mov ah, 0x0e
     mov al, `\n`
     int 0x10
@@ -249,15 +255,26 @@ letters:
 
 commands:
   .Help:
+    call nline
     
     ;; jump back
-    mov ah, 0x0e
-    mov al, `\n`
-    int 0x10
-    
-    mov ah, 0x0e
-    mov al, `\r`
-    int 0x10
+    call nline
     jmp shell.RedoPS1
+  .Date:
+    call nline
+    call time
+
+    ;; jmp back
+    jmp shell.RedoPS1
+
+nline:
+  mov ah, 0x0e
+  mov al, `\n`
+  int 0x10
+
+  mov ah, 0x0e
+  mov al, `\r`
+  int 0x10
+  ret
 
 ;; data

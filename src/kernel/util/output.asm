@@ -33,6 +33,19 @@ printf:
     ;; return
     ret
 
+
+print:
+      mov ah, 0Eh         ;Set function
+
+    .run:
+      lodsb               ;Get the char
+      cmp al, 0           ;0 has a HEX code of 0x48 so its not 0x00
+      je .done            ;Jump to done if ending code is found
+      int 10h             ;Else print
+      jmp .run            ; and jump back to .run
+
+    .done:
+      ret
 ;; print hex
 printh_:
     ;; Save state
