@@ -14,6 +14,13 @@ mov al, 0x03      ;; resolution
 mov ah, 0
 int 0x10
 
+;; Set cursor to biggest possible
+mov ah, 0x01
+mov ch, 0x00
+mov cl, 15
+int 0x10
+
+
 ;; give a message when in bootloader
 mov bx, welcome_boot
 call printf
