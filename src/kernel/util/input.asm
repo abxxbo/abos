@@ -136,6 +136,9 @@ shell:
     cmp dx, 0x002D
     je commands.AbFetch
 
+    cmp dx, 0x000F
+    je commands.Clear
+
     mov ah, 0x0e
     mov al, `\n`
     int 0x10
@@ -275,6 +278,24 @@ commands:
     jmp shell.RedoPS1
   .Reboot:
     jmp 0xFFFF:0
+
+  .Clear:
+    ;; plan
+    ;; print out tons of new lines, move cursor to 0, 0
+    ;; go back to shell
+    mov bx, Cl_nl
+    call printf
+
+    ;; move cursor back to 0, 0
+    mov ah, 0x02
+    mov bh, 0x00
+    mov dh, 0x00
+    mov dl, 0x00
+    int 0x10
+
+    ;;
+    jmp shell.RedoPS1
+  
   .AbFetch:
     call nline
 
@@ -337,7 +358,7 @@ nline:
 ;; data
 
 ;;; help command
-help0: db `help - this message\r\ndate - get current date\r\nreboot - restarts computer\r\nabfetch - system fetch`, 0
+help0: db `help - this message\r\ndate - get current date\r\ncl - clear terminal buffer\r\nreboot - restarts computer\r\nabfetch - system fetch`, 0
 
 ;;; fetch
 fetch0: db `    _     OS: AbOS\r\n`, 0
@@ -348,3 +369,7 @@ fetch3: db ` /     \\  Resolution: `, 0
 
 eit_abfetch: db '80 columns', 0
 foy_abfetch: db '40 columns', 0
+
+
+;;; Clear
+Cl_nl: db `\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n`, 0
