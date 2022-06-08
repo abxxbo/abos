@@ -115,6 +115,37 @@ shell:
     cmp cl, 'z'
     je letters.Z
 
+    ;; Numbers
+    cmp cl, '0'
+    je letters.N0
+
+    cmp cl, '1'
+    je letters.N1
+
+    cmp cl, '2'
+    je letters.N2
+
+    cmp cl, '3'
+    je letters.N3
+
+    cmp cl, '4'
+    je letters.N4
+
+    cmp cl, '5'
+    je letters.N5
+
+    cmp cl, '6'
+    je letters.N6
+
+    cmp cl, '7'
+    je letters.N7
+
+    cmp cl, '8'
+    je letters.N8
+
+    cmp cl, '9'
+    je letters.N9
+    
     ;; jump back to loop
     jmp .Loop
   
@@ -124,19 +155,19 @@ shell:
   .Enter:
 
     ;; compare
-    cmp dx, 0x0029
+    cmp dx, 0x01A9
     je commands.Help
 
-    cmp dx, 0x001E
+    cmp dx, 0x019E
     je commands.Date
 
-    cmp dx, 0x004B
+    cmp dx, 0x028B
     je commands.Reboot
 
-    cmp dx, 0x002D
+    cmp dx, 0x02CD
     je commands.AbFetch
 
-    cmp dx, 0x000F
+    cmp dx, 0x00CF
     je commands.Clear
 
     mov ah, 0x0e
@@ -179,82 +210,114 @@ shell:
 ;; letters
 letters:
   .A:
-    add dx, 1
+    add dx, 97
     jmp shell.Loop
   .B:
-    add dx, 2
+    add dx, 98
     jmp shell.Loop
   .C:
-    add dx, 3
+    add dx, 99
     jmp shell.Loop
   .D:
-    add dx, 4
+    add dx, 100
     jmp shell.Loop
   .E:
-    add dx, 5
+    add dx, 101
     jmp shell.Loop
   .F:
-    add dx, 6
+    add dx, 102
     jmp shell.Loop
   .G:
-    add dx, 7
+    add dx, 103
     jmp shell.Loop
   .H:
-    add dx, 8
+    add dx, 104
     jmp shell.Loop
   .I:
-    add dx, 9
+    add dx, 105
     jmp shell.Loop
   .J:
-    add dx, 10
+    add dx, 106
     jmp shell.Loop
   .K:
-    add dx, 11
+    add dx, 107
     jmp shell.Loop
   .L:
-    add dx, 12
+    add dx, 108
     jmp shell.Loop
   .M:
-    add dx, 13
+    add dx, 109
     jmp shell.Loop
   .N:
-    add dx, 14
+    add dx, 110
     jmp shell.Loop
   .O:
-    add dx, 15
+    add dx, 111
     jmp shell.Loop
   .P:
-    add dx, 16
+    add dx, 112
     jmp shell.Loop
   .Q:
-    add dx, 17
+    add dx, 113
     jmp shell.Loop
   .R:
-    add dx, 18
+    add dx, 114
     jmp shell.Loop
   .S:
-    add dx, 19
+    add dx, 115
     jmp shell.Loop
   .T:
-    add dx, 20
+    add dx, 116
     jmp shell.Loop
   .U:
-    add dx, 21
+    add dx, 117
     jmp shell.Loop
   .V:
-    add dx, 22
+    add dx, 118
     jmp shell.Loop
   .W:
-    add dx, 23
+    add dx, 119
     jmp shell.Loop
   .X:
-    add dx, 24
+    add dx, 120
     jmp shell.Loop
   .Y:
-    add dx, 25
+    add dx, 121
     jmp shell.Loop
   .Z:
-    add dx, 26
+    add dx, 122
+    jmp shell.Loop
+
+  ;; NUMBERS
+  .N0:
+    add dx, 0x1
+    jmp shell.Loop
+  .N1:
+    add dx, 0x2
+    jmp shell.Loop
+  .N2:
+    add dx, 0x3
+    jmp shell.Loop
+  .N3:
+    add dx, 0x4
+    jmp shell.Loop
+  .N4:
+    add dx, 0x5
+    jmp shell.Loop
+  .N5:
+    add dx, 0x6
+    jmp shell.Loop
+  .N6:
+    add dx, 0x7
+    jmp shell.Loop
+  .N7:
+    add dx, 0x8
+    jmp shell.Loop
+  .N8:
+    add dx, 0x9
+    jmp shell.Loop
+  .N9:
+    add dx, 0x10
     jmp shell.Loop
 
 
