@@ -133,6 +133,9 @@ shell:
     cmp dx, 0x004B
     je commands.Reboot
 
+    cmp dx, 0x002D
+    je commands.AbFetch
+
     mov ah, 0x0e
     mov al, `\n`
     int 0x10
@@ -272,6 +275,54 @@ commands:
     jmp shell.RedoPS1
   .Reboot:
     jmp 0xFFFF:0
+  .AbFetch:
+    call nline
+
+    ;; OS name
+    mov bx, fetch0
+    call printf
+
+    ;; Kernel version
+    mov bx, fetch1
+    call printf
+    mov bx, KVER
+    call printf
+    call nline
+
+    ;; ""Terminal"""   
+    mov bx, fetch2
+    call printf
+    
+    ;; Resolution
+    mov bx, fetch3
+    call printf
+    
+    ;; get video mode
+    mov ah, 0x0F
+    int 0x10
+
+    cmp ah, 80
+    je .Eighty
+
+    cmp ah, 40
+    je .Forty
+
+    .Eighty:
+      mov bx, eit_abfetch
+      call printf
+      
+      call nline
+      jmp shell.RedoPS1
+    
+    .Forty:
+      mov bx, foy_abfetch
+      call printf
+      
+      call nline
+    
+    ;; return back
+    jmp shell.RedoPS1
+
 
 nline:
   mov ah, 0x0e
@@ -286,4 +337,14 @@ nline:
 ;; data
 
 ;;; help command
-help0: db `help - this message\r\ndate - get current date\r\nreboot - restarts computer`, 0
+help0: db `help - this message\r\ndate - get current date\r\nreboot - restarts computer\r\nabfetch - system fetch`, 0
+
+;;; fetch
+fetch0: db `    _     OS: AbOS\r\n`, 0
+fetch1: db `   / \\    Kernel Version: `, 0
+fetch2: db `  /---\\   Terminal: VGA Video Mode\r\n`, 0
+fetch3: db ` /     \\  Resolution: `, 0
+
+
+eit_abfetch: db '80 columns', 0
+foy_abfetch: db '40 columns', 0
