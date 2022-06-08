@@ -1,14 +1,10 @@
 [org 0x7c00]
-jmp 0x0000:start_16
+xor ax, ax
+mov ds, ax
+mov es, ax
 
-start_16:
-  xor ax, ax
-  cli
-  mov ss, ax
-  mov sp, 0x7c00
-  sti
-  mov ds, ax
-  mov es, ax
+mov sp, 0x7c00
+mov bp, sp
 
 
 ;; Before we jump to our "kernel", we need to do some things
