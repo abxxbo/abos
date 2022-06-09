@@ -64,15 +64,5 @@ DMAC1:
   OUTB 0x0A, 1    ;; enable ch1
   ret
 
-;; Macro for programming the SB-16 to play a specific frequency
-%macro PlayFreq 1
-  OUTB 0x22C, 0x40
-  OUTB 0x22C, %1
-  OUTB 0x22C, 0xC0
-  OUTB 0x22C, 0x00
-  OUTB 0x22C, 0xFE
-  OUTB 0x22C, 0x0F
-%endmacro
-
 ;; Data
 SUCCESS_INITSB16: db `Enabled SB16 Driver.\r\n`, 0
