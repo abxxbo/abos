@@ -22,7 +22,8 @@ jmp $
 KVER: db 'v0.0.1-prerelease', 0 ;; I feel horrible hard coding it
 
 ;; includes
-%include "util/output.asm"
+%include "util/output/output.asm"
+%include "util/output/panic.asm"
 %include "util/input.asm"
 %include "util/date.asm"
 

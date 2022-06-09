@@ -184,10 +184,15 @@ shell:
           .com5:
             cmp dx, 0x00CF
             je commands.Clear
+            jne .com6
 
-            cmp dx, 0x0000
-            je commands.FixE
-            jne commands.NotExist
+            .com6:
+              cmp dx, 0x020B
+              je commands.Panic
+
+              cmp dx, 0x0000
+              je commands.FixE
+              jne commands.NotExist
 
     mov ah, 0x0e
     mov al, `\n`
@@ -432,6 +437,8 @@ commands:
   .FixE:
     call nline
     jmp shell.RedoPS1
+  .Panic:
+    call Panic
 
 
 nline:
