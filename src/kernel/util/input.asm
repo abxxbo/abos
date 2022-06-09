@@ -27,6 +27,9 @@ shell:
     ;; Enter key
     cmp cl, 13  ;; enter key
     je .Enter
+
+    cmp cl, 08
+    je .Backspace
     
     ;; actually print
     mov ah, 0x0e
@@ -148,7 +151,14 @@ shell:
     jmp .Loop
   
   ;; special keys
-
+  .Backspace:
+    mov ah, 0x03
+    mov bh, 0x00
+    int 0x10
+    cmp dl, 3
+    je shell
+    jne .Loop
+    
   ;; Enter key 
   .Enter:
 
