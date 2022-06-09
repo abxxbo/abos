@@ -11,7 +11,7 @@ KERNEL:
 5. potentially add a login system
 
 DRIVERS:
-1. Sound Blaster 16
+~~1. Sound Blaster 16~~
 
 PORTS:
 - nyan cat

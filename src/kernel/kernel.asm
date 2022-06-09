@@ -2,6 +2,9 @@
 ;; init
 call time
 
+;; Initialize SB-16
+call InitSB16
+
 ;; Change cursor again to biggest possible.
 ;; When loading into the next sector for
 ;; some reason it doesnt want to do it by itself
@@ -22,5 +25,8 @@ KVER: db 'v0.0.1-prerelease', 0 ;; I feel horrible hard coding it
 %include "util/output.asm"
 %include "util/input.asm"
 %include "util/date.asm"
+
+;; drivers
+%include "drv/sb16.asm"
 
 times 2560-($-$$) db 0

@@ -11,6 +11,9 @@ OUT  := bin/abos.img
 
 B_DIR := bin/
 
+# QEMU
+QEMU_F := -device sb16
+
 all: abos abos-run
 .PHONY: all
 
@@ -22,7 +25,7 @@ abos:
 	cat $(BINS) > $(OUT)
 
 abos-run: $(OUT)
-	qemu-system-x86_64 -drive format=raw,file=$^
+	qemu-system-x86_64 $(QEMU_F) -drive format=raw,file=$^
 
 clean:
 	rm -rf $(B_DIR)
