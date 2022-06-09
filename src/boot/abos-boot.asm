@@ -10,9 +10,9 @@ mov bp, sp
 ;; Before we jump to our "kernel", we need to do some things
 
 ;;; set video mode
-mov al, 0x03      ;; resolution
-mov ah, 0
-int 0x10
+; mov al, 0x03      ;; resolution
+; mov ah, 0
+; int 0x10
 
 ;; Set cursor to biggest possible
 mov ah, 0x01
@@ -38,12 +38,15 @@ mov al, cl
 int 0x10
 
 ;; compare
-cmp al, '0'
+cmp al, 48
 je SetVid40
 jl Unrecognized
 
 cmp al, 49
 je SetVid80
+
+cmp al, 50
+je NoResChange
 jg Unrecognized
 
 start:
@@ -74,9 +77,10 @@ welcome2: db `I booted on `, 0
 
 welcome_boot: db `Welcome to abos. Please select a resolution.\r\n`, 0
 
-reset_res0: db `\r\n0: 40x25\r\n1: 80x25\r\nChoice: `, 0
+reset_res0: db `\r\n0: 40x25\r\n1: 80x25\r\n2: Do not modify resolution\r\nChoice: `, 0
 reset_res1: db `\r\nUnrecognized resolution. Press any key to reboot and try again.`, 0
 
+NoResChange_: db `\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n`, 0
 ;; includes
 %include "util/read_disk.asm"
 %include "util/output.asm"
@@ -93,6 +97,13 @@ SetVid80:
   mov al, 0x03
   mov ah, 0
   int 0x10
+  jmp start
+
+NoResChange:
+  mov bx, NoResChange_
+  call printf
+
+  ;; jump back
   jmp start
 
 Unrecognized:

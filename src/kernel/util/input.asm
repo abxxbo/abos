@@ -157,18 +157,29 @@ shell:
     ;; compare
     cmp dx, 0x01A9
     je commands.Help
+    jne .com2
+    .com2:
+      cmp dx, 0x019E
+      je commands.Date
+      jne .com3
 
-    cmp dx, 0x019E
-    je commands.Date
+      .com3:
+        cmp dx, 0x028B
+        je commands.Reboot
+        jne .com4
 
-    cmp dx, 0x028B
-    je commands.Reboot
+        .com4:
+          cmp dx, 0x02CD
+          je commands.AbFetch
+          jne .com5
+          
+          .com5:
+            cmp dx, 0x00CF
+            je commands.Clear
 
-    cmp dx, 0x02CD
-    je commands.AbFetch
-
-    cmp dx, 0x00CF
-    je commands.Clear
+            cmp dx, 0x0000
+            je .RedoPS1
+            jne commands.NotExist
 
     mov ah, 0x0e
     mov al, `\n`
@@ -406,6 +417,10 @@ commands:
     
     ;; return back
     jmp shell.RedoPS1
+  .NotExist:
+    mov bx, NotExist_Str
+    call printf
+    jmp shell.RedoPS1
 
 
 nline:
@@ -435,4 +450,7 @@ foy_abfetch: db '40 columns', 0
 
 
 ;;; Clear
-Cl_nl: db `\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n`, 0
+Cl_nl: db `\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n`, 0
+
+;;; CMD does not exist string
+NotExist_Str: db `\r\nUnrecognized Command.\r\n`, 0
