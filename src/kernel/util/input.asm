@@ -189,10 +189,11 @@ shell:
             .com6:
               cmp dx, 0x020B
               je commands.Panic
-
-              cmp dx, 0x0000
-              je commands.FixE
-              jne commands.NotExist
+              jne .com7
+              .com7:
+                cmp dx, 0x0000
+                je commands.FixE
+                jne commands.NotExist
 
     mov ah, 0x0e
     mov al, `\n`
