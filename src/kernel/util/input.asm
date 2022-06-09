@@ -1,10 +1,8 @@
 ;; a scuffed/temporary shell
-;; it should be noted that all commands
-;; must be 4 letters long.
 shell:
   ;; as all shells do, let's add a PS1
   mov ah, 0x0e
-  mov al, '$'
+  mov al, '>'
   int 0x10
   ;; space, just to make it better
   mov ah, 0x0e
@@ -178,7 +176,7 @@ shell:
             je commands.Clear
 
             cmp dx, 0x0000
-            je .RedoPS1
+            je commands.FixE
             jne commands.NotExist
 
     mov ah, 0x0e
@@ -206,7 +204,7 @@ shell:
 
   .RedoPS1:
     mov ah, 0x0e
-    mov al, '$'
+    mov al, '>'
     int 0x10
 
     mov ah, 0x0e
@@ -421,6 +419,9 @@ commands:
     mov bx, NotExist_Str
     call printf
     jmp shell.RedoPS1
+  .FixE:
+    call nline
+    jmp shell.RedoPS1
 
 
 nline:
@@ -454,3 +455,5 @@ Cl_nl: db `\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\
 
 ;;; CMD does not exist string
 NotExist_Str: db `\r\nUnrecognized Command.\r\n`, 0
+
+;; End of file.
