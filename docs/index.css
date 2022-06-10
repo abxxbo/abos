@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Joan&display=swap');
+
+h1, h3, li {
+  font-family: 'Joan', sans-serif;
+}
+
+#title, #screenshots, #features {
+  width: 100%;
+  text-align: center;
+}
+
+li {
+ list-style-type: none;
+}
