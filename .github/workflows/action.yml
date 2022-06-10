@@ -1,0 +1,13 @@
+name: AbOS Test
+on: [push]
+jobs:
+  abos:
+    runs-on: ubuntu-latest
+    steps:
+      - name: install dependencies
+        run:  sudo apt-get install -y nasm binutils
+      - name: check out code
+        uses: actions/checkout@v2
+      - name: build
+        run: |
+          make
