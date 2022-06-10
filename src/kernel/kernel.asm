@@ -30,4 +30,7 @@ KVER: db 'v0.0.1-prerelease', 0 ;; I feel horrible hard coding it
 ;; drivers
 %include "drv/sb16.asm"
 
+;; include the ports
+%include "ports/nyan_cat.asm"
+
 times 2560-($-$$) db 0
