@@ -72,20 +72,46 @@ draw_dummy_window:
 
 	;; TODO: check if variable
 	;; is 0x00 or 0xFF
-	mov bx, f_
-	call printf
+	cmp byte [dummy_win_focused], byte 0xFF
+	je .Ye
+	
+	;; Check for 0x00
+	cmp byte [dummy_win_focused], byte 0x00
+	je .No
 
+	.Ye:
+		mov bx, f_
+		call printf
 
-	mov bx, dummy_win_title
-	call printf
+		mov bx, dummy_win_title
+		call printf
 
-	;; move cursor back
-	mov ah, 0x02
-	mov bh, 0x00
-	mov dh, 4
-	int 0x10
+		;; move cursor back
+		mov ah, 0x02
+		mov bh, 0x00
+		mov dh, 4
+		int 0x10
 
-	mov si, 0
+		mov si, 0
+		;; do not fall into .No
+		jmp .Loop
+
+	.No:
+		;; falls into .Loop
+		mov bx, uf
+		call printf
+
+		mov bx, dummy_win_title
+		call printf
+
+		;; move cursor back
+		mov ah, 0x02
+		mov bh, 0x00
+		mov dh, 4
+		int 0x10
+
+		mov si, 0
+
 
 	.Loop:
 		call nline_fix
@@ -102,8 +128,9 @@ draw_dummy_window:
 		inc si
 		cmp si, %4
 		jne .Loop
-
-	ret
+		je .Quit
+	.Quit:
+		ret
 %endmacro
 
 
@@ -116,9 +143,8 @@ StartGUI__:
 	;; Event loop
 
 	;; X, Y, W, H
-	.Loop:
-		draw_window 63, 4, 17, 4
-		jmp .Loop
+	draw_window 32, 4, 17, 4
+	call check_for_input
 	ret
 
 
@@ -130,7 +156,7 @@ check_for_input:
 
 	cmp al, 'q'
 	je .Quit
-	jne .Other
+	call Panic
 
 	.Quit:
 		call commands.Clear
@@ -157,7 +183,7 @@ pad: db `         `, 0
 
 ;;; Reserve space for dummy window
 ;;; TODO: actually use the struct defined
-dummy_win_focused: db 0x00					;; Default: Focused
+dummy_win_focused: db 0xFF					;; Default: Focused
 dummy_win_title: db "Dummy Win.", 0
 
 ;; Focused or not
