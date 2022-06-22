@@ -7,13 +7,19 @@ StartGUI__:
 
 	;; Event loop
 
+	call draw_dummy_window
 	.Loop:
-		call draw_dummy_window
+		call check_for_input
 		jmp .Loop
 	ret
 
 ;; Write title bar at top of the gui
 writeTitleBar:
+	mov ah, 0x02
+	mov bh, 0x00
+	mov dh, 0x00
+	mov dl, 0x00
+	int 0x10
 	mov ax, 0x0700
 	mov bh, 0x70
 	mov cx, 0x00 	;; row
@@ -25,14 +31,13 @@ writeTitleBar:
 	ret
 
 clear:
-	mov bx, Cl_nl_
-	call printf
+	mov ah, 07h
+	mov al, 00h
+	mov ch, 0x00
+	mov cl, 0x00
 
-	;; move cursor back to 0, 0
-	mov ah, 0x02
-	mov bh, 0x00
-	mov dh, 0x00
-	mov dl, 0x00
+	mov dh, 25
+	mov dl, 80
 	int 0x10
 
 	;; Disable cursor, actually
@@ -57,8 +62,8 @@ draw_dummy_window:
 	;; move cursor to initial X/Y position
 	mov ah, 0x02
 	mov bh, 0x00
-	mov dh, 4
-	mov dl, 4
+	mov dh, 4 		;; Y
+	mov dl, 30		;; X
 	int 0x10
 
 	;; draw title
@@ -66,8 +71,15 @@ draw_dummy_window:
 	mov al, ' '
 	mov bh, 0x00
 	mov bl, 0x2f
-	mov cx, 12
+	mov cx, 17
 	int 0x10
+
+
+	;; TODO: check if variable
+	;; is 0x00 or 0xFF
+	mov bx, f_
+	call printf
+
 
 	mov bx, dummy_win_title
 	call printf
@@ -88,7 +100,7 @@ draw_dummy_window:
 		mov al, ' '
 		mov bh, 0x00
 		mov bl, 0x7f
-		mov cx, 12
+		mov cx, 17
 		int 0x10
 
 		;; Loop!
@@ -101,21 +113,49 @@ draw_dummy_window:
 	.Rest_:
 		ret
 
+check_for_input:
+	xor ax, ax
+	mov ah, 0x00
+	int 16h
+
+	mov cl, al
+	cmp cl, 'q'
+	je .Quit
+	jne .Other
+
+	.Quit:
+		call commands.Clear
+		;; set cursor back to original
+		mov ah, 0x01
+		mov ch, 0x00
+		mov cl, 15
+		int 0x10
+
+		jmp shell
+		ret
+	.Other:
+		ret
+
 nline_fix:
 	mov ah, 0x0e
 	mov al, `\n`
 	int 0x10
 	ret
 
-;;; Clear
-Cl_nl_: db `\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n`, 0
-nl_: db `\n`, 0
-
 ;; Instructions (Data)
-instructions: db `Press Tab to switch windows | Arrow keys to move around | 'Q' to quit to shell\r\n`, 0
-
+instructions: db `Press Tab to switch windows | Arrow keys to move around | Q to quit\r\n`, 0
 
 ;;; Reserve space for dummy window
 ;;; TODO: actually use the struct defined
-dummy_win_focused: db 0xFF						;; Default: Focused
+dummy_win_focused: db 0x00					;; Default: Focused
 dummy_win_title: db "Dummy Win.", 0
+
+;; Focused or not
+f_: db "[F] ", 0
+uf: db "[UnF.] ", 0
+
+;;
+data_move_0: db "Up", 0
+data_move_1: db "Left", 0
+data_move_2: db "Right", 0
+data_move_3: db "Down", 0
