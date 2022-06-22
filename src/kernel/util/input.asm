@@ -459,7 +459,5 @@ Cl_nl: db `\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\
 ;;; CMD does not exist string
 NotExist_Str: db `\r\nUnrecognized Command.\r\n`, 0
 
-;; includes
-%include "gui.asm"
 
 ;; End of file.
