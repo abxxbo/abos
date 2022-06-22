@@ -162,6 +162,9 @@ shell:
   ;; Enter key 
   .Enter:
 
+  mov bx, dx
+  call printh_
+
     ;; compare
     cmp dx, 0x01A9
     je commands.Help
@@ -191,9 +194,13 @@ shell:
               je commands.Panic
               jne .com7
               .com7:
-                cmp dx, 0x0000
-                je commands.FixE
-                jne commands.NotExist
+                cmp dx, 0x0145
+                je commands.StartGUI
+                jne .com8
+                .com8:
+                  cmp dx, 0x0000
+                  je commands.FixE
+                  jne commands.NotExist
 
     mov ah, 0x0e
     mov al, `\n`
@@ -202,9 +209,6 @@ shell:
     mov ah, 0x0e
     mov al, `\r`
     int 0x10
-
-    mov bx, dx
-    call printh_
 
     mov ah, 0x0e
     mov al, `\n`
@@ -438,6 +442,8 @@ commands:
   .FixE:
     call nline
     jmp shell.RedoPS1
+  .StartGUI:
+    jmp StartGUI__
   .Panic:
     call Panic
 
@@ -455,7 +461,7 @@ nline:
 ;; data
 
 ;;; help command
-help0: db `help - this message\r\ndate - get current date\r\ncl - clear terminal buffer\r\nreboot - restarts computer\r\nabfetch - system fetch`, 0
+help0: db `help - this message\r\ndate - get current date\r\ncl - clear terminal buffer\r\nreboot - restarts computer\r\nabfetch - system fetch\r\ngui - start a primitive gui`, 0
 
 ;;; fetch
 fetch0: db `    _     OS: AbOS\r\n`, 0
@@ -473,5 +479,8 @@ Cl_nl: db `\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\
 
 ;;; CMD does not exist string
 NotExist_Str: db `\r\nUnrecognized Command.\r\n`, 0
+
+;; includes
+%include "gui.asm"
 
 ;; End of file.
