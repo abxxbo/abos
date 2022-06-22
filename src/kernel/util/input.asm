@@ -162,9 +162,6 @@ shell:
   ;; Enter key 
   .Enter:
 
-  mov bx, dx
-  call printh_
-
     ;; compare
     cmp dx, 0x01A9
     je commands.Help
@@ -190,25 +187,12 @@ shell:
             jne .com6
 
             .com6:
-              cmp dx, 0x020B
-              je commands.Panic
+              cmp dx, 0x0145
+              je commands.StartGUI
               jne .com7
               .com7:
-                cmp dx, 0x0145
-                je commands.StartGUI
-                jne .com8
-                .com8:
-                  cmp dx, 0x0000
-                  je commands.FixE
-                  jne commands.NotExist
-
-    mov ah, 0x0e
-    mov al, `\n`
-    int 0x10
-    
-    mov ah, 0x0e
-    mov al, `\r`
-    int 0x10
+                cmp dx, 0x0
+                je commands.FixE
 
     mov ah, 0x0e
     mov al, `\n`
@@ -444,8 +428,6 @@ commands:
     jmp shell.RedoPS1
   .StartGUI:
     jmp StartGUI__
-  .Panic:
-    call Panic
 
 
 nline:
