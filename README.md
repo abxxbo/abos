@@ -12,3 +12,6 @@ In the root directory, all you need to do is run `make abos`. It will compile th
 
 ## 06 June 2022
 ![dh](./img/01.png)
+
+## 22 June 2022
+![dh](./img/02.png)
