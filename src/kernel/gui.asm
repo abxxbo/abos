@@ -7,8 +7,9 @@ StartGUI__:
 
 	;; Event loop
 
-	call draw_dummy_window
 	.Loop:
+		;; todo macro
+		call draw_dummy_window
 		call check_for_input
 		jmp .Loop
 	ret
@@ -21,10 +22,13 @@ writeTitleBar:
 	mov dl, 0x00
 	int 0x10
 	mov ax, 0x0700
-	mov bh, 0x70
+	mov bh, 0x9f
 	mov cx, 0x00 	;; row
 	mov dx, 0x4f	;; column
 	int 0x10
+
+	mov bx, pad
+	call printf
 
 	mov bx, instructions
 	call printf
@@ -118,8 +122,7 @@ check_for_input:
 	mov ah, 0x00
 	int 16h
 
-	mov cl, al
-	cmp cl, 'q'
+	cmp al, 'q'
 	je .Quit
 	jne .Other
 
@@ -143,7 +146,8 @@ nline_fix:
 	ret
 
 ;; Instructions (Data)
-instructions: db `Press Tab to switch windows | Arrow keys to move around | Q to quit\r\n`, 0
+instructions: db `Press Tab to switch windows | WASD to move window | Q to quit\r\n`, 0
+pad: db `         `, 0
 
 ;;; Reserve space for dummy window
 ;;; TODO: actually use the struct defined
