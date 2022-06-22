@@ -36,12 +36,10 @@ clear:
 	int 0x10
 
 	;; Disable cursor, actually
-	; mov ah, 0x01
-	; mov ch, 0x3f
-	; int 0x10
+	mov ah, 0x01
+	mov ch, 0x3f
+	int 0x10
 	ret
-
-
 
 ;;; Window Structure
 ;; Contains information about a singular window
@@ -63,7 +61,6 @@ draw_dummy_window:
 	mov dl, 4
 	int 0x10
 
-
 	;; draw title
 	mov ah, 0x09
 	mov al, ' '
@@ -81,9 +78,28 @@ draw_dummy_window:
 	mov dh, 4
 	int 0x10
 
-	call nline_fix
+	mov si, 0
 
-	ret
+	.Loop:
+		call nline_fix
+
+		;; draw the rest
+		mov ah, 0x09
+		mov al, ' '
+		mov bh, 0x00
+		mov bl, 0x7f
+		mov cx, 12
+		int 0x10
+
+		;; Loop!
+		inc si
+		cmp si, 5
+		je .Rest_
+		jne .Loop
+
+	;; Exit
+	.Rest_:
+		ret
 
 nline_fix:
 	mov ah, 0x0e
