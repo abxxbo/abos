@@ -1,6 +1,7 @@
 [org 0x8000]
 ;; intialize GUI
 jmp StartGUI__
+jmp $
 
 ;; init
 call time

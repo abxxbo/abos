@@ -1,19 +1,5 @@
 ;; A primitive GUI of sorts
 
-StartGUI__:
-	;; Initialize some things
-	call clear
-	call writeTitleBar
-
-	;; Event loop
-
-	.Loop:
-		;; todo macro
-		call draw_dummy_window
-		call check_for_input
-		jmp .Loop
-	ret
-
 ;; Write title bar at top of the gui
 writeTitleBar:
 	mov ah, 0x02
@@ -61,13 +47,18 @@ struc win
 										;; 0xFF -> Focused
 endstruc
 
-;; Draw dummy window
+
+;; X 		 -> %1
+;; Y 		 -> %2
+;; W 		 -> %3
+;; H 		 -> %4
+%macro draw_window 4
 draw_dummy_window:
 	;; move cursor to initial X/Y position
 	mov ah, 0x02
 	mov bh, 0x00
-	mov dh, 4 		;; Y
-	mov dl, 30		;; X
+	mov dh, %2 		;; Y
+	mov dl, %1		;; X
 	int 0x10
 
 	;; draw title
@@ -75,7 +66,7 @@ draw_dummy_window:
 	mov al, ' '
 	mov bh, 0x00
 	mov bl, 0x2f
-	mov cx, 17
+	mov cx, %3
 	int 0x10
 
 
@@ -104,18 +95,33 @@ draw_dummy_window:
 		mov al, ' '
 		mov bh, 0x00
 		mov bl, 0x7f
-		mov cx, 17
+		mov cx, %3
 		int 0x10
 
 		;; Loop!
 		inc si
-		cmp si, 5
-		je .Rest_
+		cmp si, %4
 		jne .Loop
 
-	;; Exit
-	.Rest_:
-		ret
+	ret
+%endmacro
+
+
+;;; Window
+StartGUI__:
+	;; Initialize some things
+	call clear
+	call writeTitleBar
+
+	;; Event loop
+
+	;; X, Y, W, H
+	.Loop:
+		draw_window 63, 4, 17, 4
+		jmp .Loop
+	ret
+
+
 
 check_for_input:
 	xor ax, ax
