@@ -1,4 +1,7 @@
 [org 0x8000]
+;; intialize GUI
+jmp StartGUI__
+
 ;; init
 call time
 
@@ -14,8 +17,6 @@ mov cl, 15
 int 0x10
 
 
-;; intialize GUI
-jmp StartGUI__
 
 
 ;; hang infinently, we don't have much to do

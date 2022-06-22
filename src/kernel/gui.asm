@@ -5,6 +5,9 @@ StartGUI__:
 	call clear
 	call writeTitleBar
 
+	;; Create dummy window
+	call make_dummy_window
+
 	;; Event loop
 	.Loop:
 		jmp .Loop
@@ -48,13 +51,26 @@ struc win
 	.y: resw 1				;; Y position
 	.w: resw 1				;; Width of window,  must be less than 80
 	.h: resw 1				;; Height of window, must be less than 24
-	.focused: resb 1	;; 0x00 -> Focused
-										;; 0xFF -> Unfocused
-
-	;; Data that does not
+	.focused: resb 1	;; 0x00 -> Unfocused
+										;; 0xFF -> Focused
 endstruc
 
+;; Make dummy window with example values
+make_dummy_window:
+	mov si, 12
+	mov [dummy_win_x], si
 
+	mov si, 12
+	mov [dummy_win_y], si
+
+	mov si, 5
+	mov [dummy_win_w], si
+
+	mov si, 5
+	mov [dummy_win_h], si
+
+	;; Exit
+	ret
 
 ;;; Clear
 Cl_nl_: db `\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n`, 0
@@ -69,4 +85,4 @@ dummy_win_x: dw 0
 dummy_win_y: dw 0
 dummy_win_w: dw 0
 dummy_win_h: dw 0
-dummy_win_focused: db 0
+dummy_win_focused: db 0xFF	;; Default: Focused
