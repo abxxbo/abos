@@ -31,7 +31,7 @@ KVER: db 'v0.0.1-prerelease', 0 ;; I feel horrible hard coding it
 %include "util/output/panic.asm"
 %include "util/input.asm"
 %include "util/date.asm"
-%include "gui.asm"
+%include "gui/gui.asm"
 
 ;; drivers
 %include "drv/sb16.asm"

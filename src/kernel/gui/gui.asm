@@ -36,18 +36,6 @@ clear:
 	int 0x10
 	ret
 
-;;; Window Structure
-;; Contains information about a singular window
-struc win
-	.x: resw 1				;; X position
-	.y: resw 1				;; Y position
-	.w: resw 1				;; Width of window,  must be less than 80
-	.h: resw 1				;; Height of window, must be less than 24
-	.focused: resb 1	;; 0x00 -> Unfocused
-										;; 0xFF -> Focused
-endstruc
-
-
 ;; X 		 -> %1
 ;; Y 		 -> %2
 ;; W 		 -> %3
@@ -143,10 +131,15 @@ StartGUI__:
 	;; Event loop
 
 	;; X, Y, W, H
-	draw_window 32, 4, 17, 4
-	call check_for_input
-	ret
+	.Loop:
+		;; TODO: make drawing the window
+		;; not hog the resources (or
+		;; maybe make it multi-threaded)
 
+		draw_window [win_x], 4, 17, 4
+		; call window_move
+		jmp .Loop
+	ret
 
 
 check_for_input:
@@ -178,8 +171,8 @@ nline_fix:
 	ret
 
 ;; Instructions (Data)
-instructions: db `Press Tab to switch windows | WASD to move window | Q to quit\r\n`, 0
-pad: db `         `, 0
+instructions: db `Press Tab to switch windows | A/D to move window | Q to quit\r\n`, 0
+pad: db `        `, 0
 
 ;;; Reserve space for dummy window
 ;;; TODO: actually use the struct defined
@@ -190,8 +183,7 @@ dummy_win_title: db "Dummy Win.", 0
 f_: db "[F] ", 0
 uf: db "[UnF.] ", 0
 
-;;
-data_move_0: db "Up", 0
-data_move_1: db "Left", 0
-data_move_2: db "Right", 0
-data_move_3: db "Down", 0
+win_x: db 32
+win_y: db 4
+
+%include "gui/window.asm"
