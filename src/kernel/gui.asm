@@ -5,10 +5,9 @@ StartGUI__:
 	call clear
 	call writeTitleBar
 
-	;; Create dummy window
-	call make_dummy_window
-
 	;; Event loop
+	call draw_dummy_window
+
 	.Loop:
 		jmp .Loop
 	ret
@@ -17,8 +16,8 @@ StartGUI__:
 writeTitleBar:
 	mov ax, 0x0700
 	mov bh, 0x70
-	mov cx, 0x0000
-	mov dx, 0x004f
+	mov cx, 0x00 	;; row
+	mov dx, 0x4f	;; column
 	int 0x10
 
 	mov bx, instructions
@@ -37,9 +36,9 @@ clear:
 	int 0x10
 
 	;; Disable cursor, actually
-	mov ah, 0x01
-	mov ch, 0x3f
-	int 0x10
+	; mov ah, 0x01
+	; mov ch, 0x3f
+	; int 0x10
 	ret
 
 
@@ -55,34 +54,52 @@ struc win
 										;; 0xFF -> Focused
 endstruc
 
-;; Make dummy window with example values
-make_dummy_window:
-	mov si, 12
-	mov [dummy_win_x], si
+;; Draw dummy window
+draw_dummy_window:
+	;; move cursor to initial X/Y position
+	mov ah, 0x02
+	mov bh, 0x00
+	mov dh, 4
+	mov dl, 4
+	int 0x10
 
-	mov si, 12
-	mov [dummy_win_y], si
 
-	mov si, 5
-	mov [dummy_win_w], si
+	;; draw title
+	mov ah, 0x09
+	mov al, ' '
+	mov bh, 0x00
+	mov bl, 0x2f
+	mov cx, 12
+	int 0x10
 
-	mov si, 5
-	mov [dummy_win_h], si
+	mov bx, dummy_win_title
+	call printf
 
-	;; Exit
+	;; move cursor back
+	mov ah, 0x02
+	mov bh, 0x00
+	mov dh, 4
+	int 0x10
+
+	call nline_fix
+
+	ret
+
+nline_fix:
+	mov ah, 0x0e
+	mov al, `\n`
+	int 0x10
 	ret
 
 ;;; Clear
 Cl_nl_: db `\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n`, 0
-
+nl_: db `\n`, 0
 
 ;; Instructions (Data)
 instructions: db `Press Tab to switch windows | Arrow keys to move around\r\n`, 0
 
+
 ;;; Reserve space for dummy window
 ;;; TODO: actually use the struct defined
-dummy_win_x: dw 0
-dummy_win_y: dw 0
-dummy_win_w: dw 0
-dummy_win_h: dw 0
-dummy_win_focused: db 0xFF	;; Default: Focused
+dummy_win_focused: db 0xFF						;; Default: Focused
+dummy_win_title: db "Dummy Win.", 0
