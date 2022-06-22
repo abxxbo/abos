@@ -187,12 +187,9 @@ shell:
             jne .com6
 
             .com6:
-              cmp dx, 0x0145
-              je commands.StartGUI
-              jne .com7
-              .com7:
-                cmp dx, 0x0
-                je commands.FixE
+              cmp dx, 0x0000
+              je commands.FixE
+              jne .RedoPS1
 
     mov ah, 0x0e
     mov al, `\n`

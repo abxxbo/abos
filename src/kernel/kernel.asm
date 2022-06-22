@@ -13,7 +13,10 @@ mov ch, 0x00
 mov cl, 15
 int 0x10
 
-call shell
+
+;; intialize GUI
+jmp StartGUI__
+
 
 ;; hang infinently, we don't have much to do
 jmp $
