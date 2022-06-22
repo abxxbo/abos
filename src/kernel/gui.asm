@@ -6,9 +6,9 @@ StartGUI__:
 	call writeTitleBar
 
 	;; Event loop
-	call draw_dummy_window
 
 	.Loop:
+		call draw_dummy_window
 		jmp .Loop
 	ret
 
@@ -112,7 +112,7 @@ Cl_nl_: db `\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n
 nl_: db `\n`, 0
 
 ;; Instructions (Data)
-instructions: db `Press Tab to switch windows | Arrow keys to move around\r\n`, 0
+instructions: db `Press Tab to switch windows | Arrow keys to move around | 'Q' to quit to shell\r\n`, 0
 
 
 ;;; Reserve space for dummy window
