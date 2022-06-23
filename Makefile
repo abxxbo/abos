@@ -6,7 +6,7 @@ B_FLAG := -f bin -Isrc/boot/ # bootloader
 K_FLAG := -Isrc/kernel/			 # kernel
 
 # binaries and output
-BINS := bin/bootsector.bin bin/kernel.bin
+BINS := bin/bootsector.bin
 OUT  := bin/abos.img
 
 B_DIR := bin/
@@ -20,7 +20,7 @@ all: abos abos-run
 abos:
 	mkdir -p bin/
 	$(AS) $(B_FLAG) src/boot/abos-boot.asm -o bin/bootsector.bin
-	$(AS) $(K_FLAG) src/kernel/kernel.asm -o bin/kernel.bin
+	# $(AS) $(K_FLAG) src/kernel/kernel.asm -o bin/kernel.bin
 
 	cat $(BINS) > $(OUT)
 
