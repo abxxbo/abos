@@ -74,8 +74,6 @@ Panic:
   ret
 
 Clear:
-  call commands.Clear
-
   mov ah, 0x02
   mov bh, 0x00
   mov dh, 0x00

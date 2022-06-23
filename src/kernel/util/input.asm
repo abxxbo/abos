@@ -182,14 +182,9 @@ shell:
           jne .com5
           
           .com5:
-            cmp dx, 0x00CF
-            je commands.Clear
-            jne .com6
-
-            .com6:
-              cmp dx, 0x0000
-              je commands.FixE
-              jne commands.FixE
+            cmp dx, 0x0000
+            je commands.FixE
+            jne commands.FixE
 
     mov ah, 0x0e
     mov al, `\n`
@@ -352,17 +347,6 @@ commands:
   .Reboot:
     jmp 0xFFFF:0
 
-  .Clear:
-    ;; scroll window down
-  	mov ah, 07h
-    mov al, 00h
-    mov ch, 0x00
-    mov cl, 0x00
-
-    mov dh, 25
-    mov dl, 80
-    int 0x10
-
     ;;
     jmp shell.RedoPS1
   
@@ -430,7 +414,7 @@ nline:
 ;; data
 
 ;;; help command
-help0: db `help - this message\r\ndate - get current date\r\ncl - clear terminal buffer\r\nreboot - restarts computer\r\nabfetch - system fetch\r\n`, 0
+help0: db `help - this message\r\ndate - get current date\r\nreboot - restarts computer\r\nabfetch - system fetch`, 0
 
 ;;; fetch
 fetch0: db `    _     OS: AbOS\r\n`, 0
