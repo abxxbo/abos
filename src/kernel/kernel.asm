@@ -1,17 +1,26 @@
 [org 0x7e00]	;; Set all information to be pointed here.
 
-;; Initial setup
-mov ax, 0x3
-int 0x10			;; 80 x 25
-
 ;; set colorscheme
-mov ax, 600h
-mov bh, 0x9f
-xor cx, cx
-mov dx, 0x304f
+mov al, 0x03
+mov ah, 0
 int 0x10
 
+mov ah, 0x0b
+mov bh, 0x00
+mov bl, 0x9
+int 0x10
+
+Loop:
+	call get_char
+	call special_characters
+	mov ah, 0x0e
+	mov al, cl
+	int 0x10
+	jmp Loop
+
 jmp $
+
+%include "io/input.asm"
 
 ;; padding for size of kernel
 ;; max size allowed by bootloader is 6,144 bytes.
