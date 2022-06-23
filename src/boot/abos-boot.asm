@@ -7,6 +7,7 @@ mov es, ax
 mov sp, 0x7c00
 mov bp, sp
 
+mov [BDISK], dl
 call disk_read
 jmp K_LOC     ;; assume to be 0x7e00
 
