@@ -1,8 +1,4 @@
 [org 0x8000]
-;; intialize GUI
-jmp StartGUI__
-jmp $
-
 ;; init
 call time
 
@@ -17,7 +13,7 @@ mov ch, 0x00
 mov cl, 15
 int 0x10
 
-
+call shell
 
 
 ;; hang infinently, we don't have much to do
@@ -31,7 +27,6 @@ KVER: db 'v0.0.1-prerelease', 0 ;; I feel horrible hard coding it
 %include "util/output/panic.asm"
 %include "util/input.asm"
 %include "util/date.asm"
-%include "gui/gui.asm"
 
 ;; drivers
 %include "drv/sb16.asm"

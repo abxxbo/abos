@@ -189,7 +189,7 @@ shell:
             .com6:
               cmp dx, 0x0000
               je commands.FixE
-              jne .RedoPS1
+              jne commands.FixE
 
     mov ah, 0x0e
     mov al, `\n`
@@ -353,17 +353,14 @@ commands:
     jmp 0xFFFF:0
 
   .Clear:
-    ;; plan
-    ;; print out tons of new lines, move cursor to 0, 0
-    ;; go back to shell
-    mov bx, Cl_nl
-    call printf
+    ;; scroll window down
+  	mov ah, 07h
+    mov al, 00h
+    mov ch, 0x00
+    mov cl, 0x00
 
-    ;; move cursor back to 0, 0
-    mov ah, 0x02
-    mov bh, 0x00
-    mov dh, 0x00
-    mov dl, 0x00
+    mov dh, 25
+    mov dl, 80
     int 0x10
 
     ;;
@@ -416,16 +413,9 @@ commands:
     
     ;; return back
     jmp shell.RedoPS1
-  .NotExist:
-    mov bx, NotExist_Str
-    call printf
-    jmp shell.RedoPS1
   .FixE:
     call nline
     jmp shell.RedoPS1
-  .StartGUI:
-    jmp StartGUI__
-
 
 nline:
   mov ah, 0x0e
@@ -440,7 +430,7 @@ nline:
 ;; data
 
 ;;; help command
-help0: db `help - this message\r\ndate - get current date\r\ncl - clear terminal buffer\r\nreboot - restarts computer\r\nabfetch - system fetch\r\ngui - start a primitive gui`, 0
+help0: db `help - this message\r\ndate - get current date\r\ncl - clear terminal buffer\r\nreboot - restarts computer\r\nabfetch - system fetch\r\n`, 0
 
 ;;; fetch
 fetch0: db `    _     OS: AbOS\r\n`, 0
@@ -451,13 +441,5 @@ fetch3: db ` /     \\  Resolution: `, 0
 
 eit_abfetch: db '80 columns', 0
 foy_abfetch: db '40 columns', 0
-
-
-;;; Clear
-Cl_nl: db `\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n`, 0
-
-;;; CMD does not exist string
-NotExist_Str: db `\r\nUnrecognized Command.\r\n`, 0
-
 
 ;; End of file.

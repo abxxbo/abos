@@ -74,8 +74,7 @@ Panic:
   ret
 
 Clear:
-  mov bx, Cl_nl
-  call printf
+  call commands.Clear
 
   mov ah, 0x02
   mov bh, 0x00
