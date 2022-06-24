@@ -10,15 +10,14 @@ mov bh, 0x00
 mov bl, 0x9
 int 0x10
 
-mov cl, 3
-call read_sector
+call shell
 
 jmp $
 
-%include "fs/fs-read.asm"
 
 %include "io/input.asm"
 %include "io/output.asm"
+%include "io/shell.asm"
 
 
 ;; padding for size of kernel
