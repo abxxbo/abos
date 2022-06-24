@@ -20,7 +20,7 @@ shell:
 		cmp [buffer], dword "help"
 		je commands.Help
 
-		cmp [buffer], dword "clear"
+		cmp [buffer], dword "cls"
 		je commands.Clear
 
 		;; jump back
@@ -61,6 +61,14 @@ commands:
 	.Help:
 		mov bx, help0
 		call printf
+
+		mov si, 0
+		.LoopH:
+			mov byte [buffer+si], byte 0
+			inc si
+			cmp si, 128
+			je shell
+			jne .LoopH
 		;; return
 		jmp shell
 	.Clear:
@@ -81,8 +89,17 @@ commands:
 		mov dl, 0
 		int 0x10
 
+		mov si, 0
+		.Loop:
+			mov byte [buffer+si], byte 0
+			inc si
+			cmp si, 128
+			je shell
+			jne .Loop
+
 		jmp shell
 
-help0: db `AbOS Help\r\nhelp --> This command\r\nclear --> clear screen\r\n`, 0
+help0: db `AbOS Help\r\nhelp --> This command\r\ncls --> clear screen\r\n`, 0
 
 buffer: times 128 db 0
+cleared: times 128 db 0
