@@ -10,6 +10,16 @@ mov bh, 0x00
 mov bl, 0x9
 int 0x10
 
+mov ah, 0x07
+mov al, 0x00
+mov bh, 0xf
+mov ch, 0
+mov cl, 0
+mov dh, 80
+mov dl, 25
+int 0x10
+
+
 call shell
 
 jmp $
