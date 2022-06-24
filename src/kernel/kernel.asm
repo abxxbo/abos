@@ -10,10 +10,16 @@ mov bh, 0x00
 mov bl, 0x9
 int 0x10
 
+mov cl, 3
+call read_sector
+
 jmp $
+
+%include "fs/fs-read.asm"
 
 %include "io/input.asm"
 %include "io/output.asm"
+
 
 ;; padding for size of kernel
 ;; max size allowed by bootloader is 6,144 bytes.
