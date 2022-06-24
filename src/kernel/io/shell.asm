@@ -3,10 +3,17 @@ shell:
 	mov cl, al
 	cmp cl, 13
 	je .Enter
+
+	cmp cl, 08
+	je .Backspace
 	jne .Print
 
 	.Enter:
 		mov si, 0
+		printc `\r`
+		printc `\n`
+		mov bx, buffer
+		call printf
 		printc `\r`
 		printc `\n`
 		;; check if our buffer is equal to some of our commands
@@ -17,6 +24,27 @@ shell:
 		je commands.Clear
 
 		;; jump back
+		jmp shell
+	.Backspace:
+		dec si
+		mov byte[buffer+si], byte `\0`
+
+		;; get current cursor position
+		mov ah, 0x03
+		mov bh, 0
+		int 0x10
+
+		mov ch, dl
+		mov bl, dh
+		dec ch
+
+		;; move cursor
+		mov ah, 0x02
+		mov bh, 0
+		mov dl, ch
+		movzx dh, bl
+		int 0x10
+
 		jmp shell
 	.Print:
 		printc cl
@@ -49,8 +77,8 @@ commands:
 		;; move cursor back up to 0,0
 		mov ah, 0x02
 		mov bh, 0
-		mov dh, 1
-		mov dl, 1
+		mov dh, 0
+		mov dl, 0
 		int 0x10
 
 		jmp shell
