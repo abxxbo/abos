@@ -42,7 +42,7 @@ shell:
 		mov ah, 0x02
 		mov bh, 0
 		mov dl, ch
-		movzx dh, bl
+		mov dh, bl
 		int 0x10
 
 		jmp shell
