@@ -41,18 +41,7 @@ exit_screen:
 		mov cl, al
 		cmp cl, 13
 		je .Exit
-
-		cmp cl, 'y'
-		je write3rd
-
-		mov ah, 0x0e
-		mov al, cl
-		int 0x10
-
-
-		mov byte [storage_buf+si], byte cl
-
-		jmp .Loop
+		jne .Loop
 	.Exit:
 		printc `\r`
 		printc `\n`
@@ -80,9 +69,13 @@ exit_screen:
 		mov byte [buffer+si], byte 0
 		inc si
 		cmp si, 128
-		je shell
+		je .Final
 		jne .KillBuffer
 
+	.Final:
+		mov bx, titlebar
+		call printf
+		call write3rd
 	jmp $
 
 read3rd:
@@ -98,12 +91,12 @@ read3rd:
 	mov bx, 0
 	mov es, bx	;; reset
 	pop bx
-	mov bx, 0x8000
+	mov bx, editor_buffer
 	int 0x13
 
 	jc disk_err
 	popa
-	mov bx, 0x8000
+	mov bx, editor_buffer
 	call printf
 	jmp exit_screen.KillBuffer
 	ret
@@ -129,8 +122,7 @@ write3rd:
 	int 0x13
 
 	jc disk_err
-	jmp exit_screen.KillBuffer
-	ret
+	jmp shell
 
 set_colors:
 	mov al, 0x03
