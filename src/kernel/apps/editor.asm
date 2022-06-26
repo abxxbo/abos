@@ -3,12 +3,25 @@ editor:
 	;; clear screen and
 	;; change palette
 	call set_colors
+	;; write title bar
 	call make_titlebar
 
-	;; write title bar
+	mov si, 0
+
 	.MainLoop:
+		call get_char
+		mov cl, al
+		mov ah, 0x0e
+		mov al, cl
+		int 0x10
+		;; add to buffer
+		mov byte [editor_buffer+si], byte cl
+		inc si
+
+
 		;; something
 		jmp .MainLoop
+
 
 
 set_colors:
