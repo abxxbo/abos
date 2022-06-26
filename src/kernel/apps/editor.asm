@@ -42,9 +42,13 @@ exit_screen:
 		cmp cl, 13
 		je .Exit
 
+		cmp cl, 'y'
+		je write3rd
+
 		mov ah, 0x0e
 		mov al, cl
 		int 0x10
+
 
 		mov byte [storage_buf+si], byte cl
 
@@ -80,6 +84,53 @@ exit_screen:
 		jne .KillBuffer
 
 	jmp $
+
+read3rd:
+	pusha
+	mov ah, 0x02
+	mov dl, 0x80 ;; 0x00 -> floppy, NOT HDD
+	mov ch, 0x00 ;; first cyl
+	mov dh, 0x00 ;; first head
+	mov al, 1		 ;; no. of sect
+	mov cl, 3		 ;; 3rd sector
+	
+	push bx
+	mov bx, 0
+	mov es, bx	;; reset
+	pop bx
+	mov bx, 0x8000
+	int 0x13
+
+	jc disk_err
+	popa
+	mov bx, 0x8000
+	call printf
+	jmp exit_screen.KillBuffer
+	ret
+
+disk_err:
+	int 19h
+	ret
+
+write3rd:
+	pusha
+	mov ah, 0x03
+	mov dl, 0x80
+	mov ch, 0x00
+	mov dh, 0x00
+	mov al, 1
+	mov cl, 3
+
+	push bx
+	mov bx, 0
+	mov es, bx
+	pop bx
+	mov bx, editor_buffer
+	int 0x13
+
+	jc disk_err
+	jmp exit_screen.KillBuffer
+	ret
 
 set_colors:
 	mov al, 0x03

@@ -22,6 +22,9 @@ shell:
 		cmp [buffer], dword "edit"
 		je editor
 
+		cmp [buffer], dword "shell"
+		je read3rd
+
 		;; jump back
 		jmp shell
 	.Backspace:

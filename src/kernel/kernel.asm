@@ -32,7 +32,6 @@ jmp $
 
 ;; padding for size of kernel
 ;; max size allowed by bootloader is 6,144 bytes.
-;; for now we will use 2048 bytes.
 
 ;; pad the rest with 0s
-times 2048-($-$$) db 0
+times 4096-($-$$) db 0
