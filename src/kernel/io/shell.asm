@@ -12,16 +12,15 @@ shell:
 		mov si, 0
 		printc `\r`
 		printc `\n`
-		mov bx, buffer
-		call printf
-		printc `\r`
-		printc `\n`
 		;; check if our buffer is equal to some of our commands
 		cmp [buffer], dword "help"
 		je commands.Help
 
 		cmp [buffer], dword "cls"
 		je commands.Clear
+
+		cmp [buffer], dword "edit"
+		je editor
 
 		;; jump back
 		jmp shell
@@ -99,7 +98,10 @@ commands:
 
 		jmp shell
 
-help0: db `AbOS Help\r\nhelp --> This command\r\ncls --> clear screen\r\n`, 0
+help0: db `AbOS Help\r\nhelp --> This command\r\ncls  --> clear screen\r\nedit --> editor\r\n`, 0
+
+;; applications to be executed
+%include "apps/editor.asm"
 
 buffer: times 128 db 0
 cleared: times 128 db 0
