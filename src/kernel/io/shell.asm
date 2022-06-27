@@ -17,12 +17,12 @@ shell:
 		je commands.Help
 
 		cmp [buffer], dword "cls"
-		je commands.Clear
+		je clear_scr
 
 		cmp [buffer], dword "edit"
 		je editor
 
-		cmp [buffer], dword "shell"
+		cmp [buffer], dword "readfrom3"
 		je read3rd
 
 		;; jump back
@@ -101,7 +101,21 @@ commands:
 
 		jmp shell
 
-help0: db `AbOS Help\r\nhelp --> This command\r\ncls  --> clear screen\r\nedit --> editor\r\n`, 0
+clear_scr:
+
+	;; other
+	mov al, 0x03
+	mov ah, 0
+	int 0x10
+
+	mov ah, 0x0b
+	mov bh, 0x00
+	mov bl, 0x9
+	int 0x10
+	jmp shell
+
+help0: db `AbOS Help\r\nhelp --> This command\r\ncls  --> clear screen\r\nedit --> editor\r\nreadfrom3 --> read sector 3\r\n`, 0
+
 
 ;; applications to be executed
 %include "apps/editor.asm"

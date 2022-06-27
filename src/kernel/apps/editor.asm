@@ -11,8 +11,18 @@ editor:
 	.MainLoop:
 		call get_char
 		mov cl, al
-		cmp cl, 0x1157	;; Shift+W
+
+		;; Some keys are special
+
+		;; Backspace, Enter
+		cmp cl, 0x1117	;; Ctrl+W
 		je exit_screen
+
+		cmp cl, 13	;; enter
+		je .MainLoopEnter
+
+		cmp cl, 08	;; backspace
+		je .MainLoopBack
 
 		mov ah, 0x0e
 		mov al, cl
@@ -23,6 +33,34 @@ editor:
 
 
 		;; something
+		jmp .MainLoop
+	
+	; special keys
+	.MainLoopEnter:
+		printc `\r`
+		printc `\n`
+		mov byte [editor_buffer+si], byte ' '
+		jmp .MainLoop		;; go back
+
+	.MainLoopBack:
+		dec si
+		mov byte [editor_buffer+si], byte `\0`
+
+		;; pulled from shell.asm
+		mov ah, 0x03
+		mov bh, 0
+		int 0x10
+
+		mov ch, dl
+		mov bl, dh
+		dec ch
+
+		;; move cursor
+		mov ah, 0x02
+		mov bh, 0
+		mov dl, ch
+		mov dh, bl
+		int 0x10
 		jmp .MainLoop
 
 
@@ -69,14 +107,10 @@ exit_screen:
 		mov byte [buffer+si], byte 0
 		inc si
 		cmp si, 128
-		je .Final
-		jne .KillBuffer
-
-	.Final:
-		mov bx, titlebar
-		call printf
-		call write3rd
+		je write3rd
+		jmp .KillBuffer
 	jmp $
+	ret
 
 read3rd:
 	pusha
@@ -91,18 +125,23 @@ read3rd:
 	mov bx, 0
 	mov es, bx	;; reset
 	pop bx
-	mov bx, editor_buffer
+	mov bx, read_buffer
 	int 0x13
 
 	jc disk_err
 	popa
-	mov bx, editor_buffer
+	mov bx, read_buffer
 	call printf
+
+	printc `\r`
+	printc `\n`
 	jmp exit_screen.KillBuffer
 	ret
 
+
+;; maybe if you can't read, don't reboot the entire computer
 disk_err:
-	int 19h
+	jmp $
 	ret
 
 write3rd:
@@ -118,11 +157,17 @@ write3rd:
 	mov bx, 0
 	mov es, bx
 	pop bx
-	mov bx, editor_buffer
 	int 0x13
+	
+	mov bx, editor_buffer
+	call printf
+
+	printc `\r`
+	printc `\n`
 
 	jc disk_err
 	jmp shell
+	ret
 
 set_colors:
 	mov al, 0x03
@@ -161,9 +206,10 @@ titlebar: db 'AbEdit', 0
 spaces_titlebar: db '                                     ', 0
 
 editor_buffer: times 1024 db 0
+read_buffer: times 1024 db 0
 
 storage_buf: times 1 db 0
-storage_q: db 'Save to 3rd sector (Overwrites anything else)? ', 0
+storage_q: db "Save to 3rd sector (Overwrites anything else)? ", 0
 storage_saving: db `I am saving this buffer to: `, 0
 
 lotsoflines:
