@@ -24,6 +24,14 @@ editor:
 		cmp cl, 08	;; backspace
 		je .MainLoopBack
 
+
+		;; -- special mathematical characters --
+		cmp cl, 0x1f13 ;; ctrl+s (sqrt)
+		je .MainLoopSq
+
+		cmp cl, 0x1f00 ;; alt+s (summation)
+		je .MainLoopSum
+
 		mov ah, 0x0e
 		mov al, cl
 		int 0x10
@@ -63,6 +71,14 @@ editor:
 		int 0x10
 		jmp .MainLoop
 
+	;; some math things
+	.MainLoopSq:	;; sqare root
+		printc 0xfb
+		jmp .MainLoop
+
+	.MainLoopSum:	;; summation
+		printc 0xe4
+		jmp .MainLoop
 
 exit_screen:
 	;; do some stuff

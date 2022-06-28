@@ -7,5 +7,5 @@
 ### EDITOR
 - Support for Special Characters
 	- currently planned are
-		- ∑ - Alt+S
-		- √ - Ctrl+S
+		- ~~∑ - Alt+S~~
+		- ~~√ - Ctrl+S~~
