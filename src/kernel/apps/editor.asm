@@ -33,9 +33,6 @@ editor:
 		;; add to buffer
 		mov byte [editor_buffer+si], byte cl
 		inc si
-
-
-		;; something
 		jmp .MainLoop
 	
 	; special keys
@@ -65,19 +62,13 @@ editor:
 		mov dh, bl
 		int 0x10
 		jmp .MainLoop
+
 exit_screen:
 	;; do some stuff
 	printc `\r`
 	printc `\n`
 	;; ask user where they
-	;; would like to save file
-	;; temporary workaround
-	printc `s`
-	printc `a`
-	printc `v`
-	printc `e`
-	printc `?`
-	printc ` `
+	;; would like to save file (TODO)
 
 	mov si, 0
 	.Loop:
@@ -191,14 +182,11 @@ make_titlebar:
 	ret
 
 titlebar: db 'AbEdit', 0
-spaces_titlebar: db '                                     ', 0
+spaces_titlebar: times 37 db 0x20
 
 editor_buffer: times 1024 db 0
 read_buffer: times 1024 db 0
 
-storage_buf: times 1 db 0
-storage_q: db "Save to 3rd sector (Overwrites anything else)? ", 0
-storage_saving: db `I am saving this buffer to: `, 0
+storage_q: db 'Yuh ', 0
 
-lotsoflines:
-	db `\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r`, 0
+lotsoflines: times 20 db `\r\n`, 0

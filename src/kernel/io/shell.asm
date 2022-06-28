@@ -22,7 +22,7 @@ shell:
 		cmp [buffer], dword "edit"
 		je editor
 
-		cmp [buffer], dword "readfrom3"
+		cmp [buffer], dword "read"
 		je read3rd
 
 		;; jump back
