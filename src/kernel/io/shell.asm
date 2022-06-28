@@ -7,7 +7,6 @@ shell:
 	cmp cl, 08
 	je .Backspace
 	jne .Print
-
 	.Enter:
 		mov si, 0
 		printc `\r`
@@ -58,7 +57,6 @@ shell:
 		;; Loop!
 		jmp shell
 
-
 commands:
 	.Help:
 		mov bx, help0
@@ -83,31 +81,13 @@ commands:
 		mov dh, 80
 		mov dl, 25
 		int 0x10
-
-		;; move cursor back up to 0,0
-		mov ah, 0x02
-		mov bh, 0
-		mov dh, 0
-		mov dl, 0
-		int 0x10
-
-		mov si, 0
-		.Loop:
-			mov byte [buffer+si], byte 0
-			inc si
-			cmp si, 128
-			je shell
-			jne .Loop
-
-		jmp shell
+	ret
 
 clear_scr:
-
 	;; other
 	mov al, 0x03
 	mov ah, 0
 	int 0x10
-
 	mov ah, 0x0b
 	mov bh, 0x00
 	mov bl, 0x9
@@ -115,10 +95,6 @@ clear_scr:
 	jmp shell
 
 help0: db `AbOS Help\r\nhelp --> This command\r\ncls  --> clear screen\r\nedit --> editor\r\nreadfrom3 --> read sector 3\r\n`, 0
-
-
-;; applications to be executed
-%include "apps/editor.asm"
-
+%include "apps/editor.asm" ;; applications to be executed
 buffer: times 128 db 0
 cleared: times 128 db 0
