@@ -1,3 +1,6 @@
+;; fs
+%include "filesystem/fs.asm"
+
 ;; AbOS editor
 editor:
 	;; clear screen and
@@ -23,14 +26,6 @@ editor:
 
 		cmp cl, 08	;; backspace
 		je .MainLoopBack
-
-
-		;; -- special mathematical characters --
-		cmp cl, 0x1f13 ;; ctrl+s (sqrt)
-		je .MainLoopSq
-
-		cmp cl, 0x1f00 ;; alt+s (summation)
-		je .MainLoopSum
 
 		mov ah, 0x0e
 		mov al, cl
@@ -70,16 +65,6 @@ editor:
 		mov dh, bl
 		int 0x10
 		jmp .MainLoop
-
-	;; some math things
-	.MainLoopSq:	;; sqare root
-		printc 0xfb
-		jmp .MainLoop
-
-	.MainLoopSum:	;; summation
-		printc 0xe4
-		jmp .MainLoop
-
 exit_screen:
 	;; do some stuff
 	printc `\r`
@@ -128,10 +113,16 @@ exit_screen:
 		mov byte [buffer+si], byte 0
 		inc si
 		cmp si, 128
-		je write3rd
+		je invoke_write3rd
 		jmp .KillBuffer
 	jmp $
 	ret
+
+;; instead of using a shitty implementation
+;; we invoke the fs implementation i wrote
+invoke_write3rd:
+	write_sector 1, 3, editor_buffer
+	call shell	;; go back to shell i guess
 
 read3rd:
 	pusha
@@ -149,45 +140,21 @@ read3rd:
 	mov bx, read_buffer
 	int 0x13
 
-	jc disk_err
+	jc failed_op
 	popa
 	mov bx, read_buffer
 	call printf
 
 	printc `\r`
 	printc `\n`
-	jmp exit_screen.KillBuffer
-	ret
-
-
-;; maybe if you can't read, don't reboot the entire computer
-disk_err:
-	jmp $
-	ret
-
-write3rd:
-	pusha
-	mov ah, 0x03
-	mov dl, 0x80
-	mov ch, 0x00
-	mov dh, 0x00
-	mov al, 1
-	mov cl, 3
-
-	push bx
-	mov bx, 0
-	mov es, bx
-	pop bx
-	int 0x13
-	
-	mov bx, editor_buffer
-	call printf
-
-	printc `\r`
-	printc `\n`
-
-	jc disk_err
-	jmp shell
+	.Loop:
+		;; clear the buffer
+		;; the jump to shell
+		mov byte [buffer+si], byte 0
+		inc si
+		cmp si, 128
+		je shell
+		jne .Loop
 	ret
 
 set_colors:
