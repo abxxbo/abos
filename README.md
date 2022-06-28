@@ -6,12 +6,3 @@ In the root directory, all you need to do is run `make abos`. It will compile th
 
 ## Running
 **NOTE**: ABOS has never been tested on real hardware, only qemu. Due to this, *I am not responsible if you damage your computer!*
-
-
-# Screenshots
-
-## 06 June 2022
-![dh](./img/01.png)
-
-## 22 June 2022
-![dh](./img/02.png)
