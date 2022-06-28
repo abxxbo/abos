@@ -11,9 +11,6 @@ OUT  := bin/abos.img
 
 B_DIR := bin/
 
-# QEMU
-QEMU_F := -device sb16
-
 all: abos abos-run
 .PHONY: all
 
