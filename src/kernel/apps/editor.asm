@@ -70,8 +70,13 @@ exit_screen:
 	printc `\n`
 	;; ask user where they
 	;; would like to save file
-	mov bx, storage_q
-	call printf
+	;; temporary workaround
+	printc `s`
+	printc `a`
+	printc `v`
+	printc `e`
+	printc `?`
+	printc ` `
 
 	mov si, 0
 	.Loop:
