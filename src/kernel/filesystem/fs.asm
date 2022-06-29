@@ -27,7 +27,6 @@
 	int 0x13
 
 	jc failed_op
-	ret	;; just incase
 %endmacro
 
 ;; Write to sector
@@ -80,29 +79,10 @@ ItFree:
 
 ;;; ------- debuging -------
 failed_op:
-	mov ah, 0x01
-	mov dl, 0x80	;; adjust for floppy (0x80) soon™️
-	int 0x13
-
-	cmp ah, 0x03
-	je .WriteProtected
-
-	cmp ah, 0x04
-	je .SCNotFound
-
-	.WriteProtected:
-		mov bx, write_prot
-		call printf
-		jmp $	;; i guess?
-	.SCNotFound:
-		mov bx, sc_not
-		call printf
-		jmp $
-	
-;; data
-write_prot: db `I failed to write to a sector due to the disk being write protected\r\n`, 0
-sc_not:			db `Sector was not found on disk\r\n`, 0
-
+	mov cx, 0xFFFF
+	mov bx, cx
+	call printh
+	ret
 
 ;; buffer for checking if the current sector is empty or not.
 ;; set to times 512 db 0 because that is equal to 512 bytes

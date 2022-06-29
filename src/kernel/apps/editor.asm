@@ -1,5 +1,5 @@
 ;; fs
-%include "filesystem/fs.asm"
+; %include "filesystem/fs.asm"
 
 ;; AbOS editor
 editor:
@@ -115,38 +115,7 @@ invoke_write3rd:
 	write_sector 1, 3, editor_buffer
 	call shell	;; go back to shell i guess
 
-read3rd:
-	pusha
-	mov ah, 0x02
-	mov dl, 0x80 ;; 0x00 -> floppy, NOT HDD
-	mov ch, 0x00 ;; first cyl
-	mov dh, 0x00 ;; first head
-	mov al, 1		 ;; no. of sect
-	mov cl, 3		 ;; 3rd sector
-	
-	push bx
-	mov bx, 0
-	mov es, bx	;; reset
-	pop bx
-	mov bx, read_buffer
-	int 0x13
-
-	jc failed_op
-	popa
-	mov bx, read_buffer
-	call printf
-
-	printc `\r`
-	printc `\n`
-	.Loop:
-		;; clear the buffer
-		;; the jump to shell
-		mov byte [buffer+si], byte 0
-		inc si
-		cmp si, 128
-		je shell
-		jne .Loop
-	ret
+; 
 
 set_colors:
 	mov al, 0x03
@@ -184,9 +153,9 @@ make_titlebar:
 titlebar: db 'AbEdit', 0
 spaces_titlebar: times 37 db 0x20
 
-editor_buffer: times 1024 db 0
-read_buffer: times 1024 db 0
+editor_buffer: times 512 db 0
+read_buffer: times 512 db 0
 
-storage_q: db 'Yuh ', 0
+_UnEmpty: db `Sector is empty!\r\n`, 0
 
 lotsoflines: times 20 db `\r\n`, 0

@@ -22,7 +22,12 @@ shell:
 		je editor
 
 		cmp [buffer], dword "read"
-		je read3rd
+		je invoke_read3rd
+
+		mov [sector_read_ls], byte 0x01	;; start at sector one
+		
+		cmp [buffer], dword "ls"
+		je cmd_ls
 
 		;; jump back
 		jmp shell
@@ -62,6 +67,9 @@ commands:
 		mov bx, help0
 		call printf
 
+		mov bx, help1
+		call printf
+
 		mov si, 0
 		.LoopH:
 			mov byte [buffer+si], byte 0
@@ -94,7 +102,30 @@ clear_scr:
 	int 0x10
 	jmp shell
 
-help0: db `AbOS Help\r\nhelp --> This command\r\ncls  --> clear screen\r\nedit --> editor\r\nreadfrom3 --> read sector 3\r\n`, 0
+%include "filesystem/fs.asm"
+
+invoke_read3rd:
+	read_sector 1, 3, read_buffer
+
+	mov bx, read_buffer
+	call printf
+	printc `\r`
+	printc `\n`
+	;; clear buffer
+	.Loop:
+		mov byte [buffer+si], byte 0
+		inc si
+		cmp si, 128
+		je shell
+		jne .Loop
+
+	ret
+
+;; data
+help0: db `AbOS Help\r\nhelp --> This command\r\ncls  --> clear screen\r\nedit --> editor\r\nread --> read sector 3\r\n`, 0
+
 %include "apps/editor.asm" ;; applications to be executed
+
+
 buffer: times 128 db 0
 cleared: times 128 db 0
