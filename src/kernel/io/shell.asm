@@ -24,11 +24,6 @@ shell:
 		cmp [buffer], dword "read"
 		je invoke_read3rd
 
-		mov [sector_read_ls], byte 0x01	;; start at sector one
-		
-		cmp [buffer], dword "ls"
-		je cmd_ls
-
 		;; jump back
 		jmp shell
 	.Backspace:
@@ -65,9 +60,6 @@ shell:
 commands:
 	.Help:
 		mov bx, help0
-		call printf
-
-		mov bx, help1
 		call printf
 
 		mov si, 0
