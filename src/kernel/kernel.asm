@@ -1,9 +1,9 @@
 [org 0x7e00]	;; Set all information to be pointed here.
 
-call clear_scr
+%include "io/output.asm"
+printc 0x61
 call shell
 
 jmp $
 
-%include "io/output.asm"
 %include "io/shell.asm"
