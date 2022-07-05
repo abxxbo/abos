@@ -84,14 +84,11 @@ commands:
 	ret
 
 clear_scr:
-	;; other
+	;; video mode
 	mov al, 0x03
 	mov ah, 0
 	int 0x10
-	mov ah, 0x0b
-	mov bh, 0x00
-	mov bl, 0x9
-	int 0x10
+
 	jmp shell
 
 %include "filesystem/fs.asm"
