@@ -12,7 +12,7 @@ editor:
 	mov si, 0
 
 	.MainLoop:
-		call get_char
+		get_char
 		mov cl, al
 
 		;; Some keys are special
@@ -72,7 +72,7 @@ exit_screen:
 
 	mov si, 0
 	.Loop:
-		call get_char
+		get_char
 		mov cl, al
 		cmp cl, 13
 		je .Exit

@@ -5,6 +5,5 @@ call shell
 
 jmp $
 
-%include "io/input.asm"
 %include "io/output.asm"
 %include "io/shell.asm"

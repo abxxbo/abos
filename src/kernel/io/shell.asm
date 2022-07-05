@@ -1,5 +1,11 @@
+%macro get_char 0
+	xor ax, ax
+	mov ah, 0x00
+	int 0x16
+%endmacro
+
 shell:
-	call get_char
+	get_char
 	mov cl, al
 	cmp cl, 13
 	je .Enter
