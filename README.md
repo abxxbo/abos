@@ -18,10 +18,11 @@ modern hardware today actually comes with a VGA driver, rather, "a VESA driver".
 
 ## Releases
 If you want to get the most stable version of AbOS, you can check the releases
-tab. Each release contains both:
+tab. Each release contains:
 - Floppy version (for a live version of the OS, as well as a portable version of it)
-- HDD version (to directly write to the hard disk, this will prompt you to install
-the OS onto your computer.)
+
+***Disclaimer:*** The current version of ABOS writes to the hard disk instead of floppy.
+This will be changed in the future.
 
 ### Why is PSI in the release name?
 To be honest, I really like Greek characters. It does not have any real effect
