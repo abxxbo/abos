@@ -1,28 +1,30 @@
+# Assembly options
 AS := nasm
+AS_FLAGS := -fbin 
 
+# Kernel flags
+K_FLAGS  := -Isrc/kernel/
+# Bootloader flags
+B_FLAGS  := -Isrc/boot/
 
-# specific file flags
-B_FLAG := -f bin -Isrc/boot/ # bootloader
-K_FLAG := -Isrc/kernel/			 # kernel
+OBJS := bin/bootsector.bin bin/kernel.bin
+OBJ_DIR := bin
 
-# binaries and output
-BINS := bin/bootsector.bin bin/kernel.bin
-OUT  := bin/abos.img
+B_FILE := src/boot/abos-boot.asm
+K_FILE := src/kernel/kernel.asm
 
-B_DIR := bin/
-
-all: abos abos-run
+all: create_dir boot kernel link
 .PHONY: all
 
-abos:
-	mkdir -p bin/
-	$(AS) $(B_FLAG) src/boot/abos-boot.asm -o bin/bootsector.bin
-	$(AS) $(K_FLAG) src/kernel/kernel.asm -o bin/kernel.bin
+create_dir:
+	mkdir -p $(OBJ_DIR)
 
-	cat $(BINS) > $(OUT)
+boot: $(B_FILE)
+	$(AS) $(AS_FLAGS) $(B_FLAGS) $^ -o $(OBJ_DIR)/bootsector.bin
 
-abos-run: $(OUT)
-	qemu-system-x86_64 $(QEMU_F) -drive format=raw,file=$^
 
-clean:
-	rm -rf $(B_DIR)
+kernel: $(K_FILE)
+	$(AS) $(AS_FLAGS) $(K_FLAGS) $^ -o $(OBJ_DIR)/kernel.bin
+
+link:
+	cat $(OBJS) > $(OBJ_DIR)/abos.img
