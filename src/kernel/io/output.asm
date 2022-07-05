@@ -1,3 +1,10 @@
+%macro printc_ 1
+	mov [x], di
+	mov word [es:di], %1
+	mov word [es:di+1], 0x07
+	mov di, [x]
+	add di, 2
+%endmacro
 %macro printc 1
 	mov ah, 0x0e
 	mov al, %1
@@ -78,3 +85,6 @@ printh_end:
     pop ax
 
     ret
+
+;; pos
+x: db 0
