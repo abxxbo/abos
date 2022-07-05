@@ -12,14 +12,13 @@ mov ah, 0
 int 0x10
 
 call detect_low
-call detect_upper
+;; Makes disk reading
+;; fail:
+; call detect_upper
 
 
 mov [BDISK], dl
 call disk_read
-mov ah, 0x0e
-mov al, 't'
-int 0x10
 jmp K_LOC     ;; assume to be 0x7e00
 
 jmp $
