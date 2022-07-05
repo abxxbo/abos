@@ -28,3 +28,18 @@ kernel: $(K_FILE)
 
 link:
 	cat $(OBJS) > $(OBJ_DIR)/abos.img
+
+# Debugging / Emulator
+EMU := qemu-system-x86_64
+
+# debugging in qemu
+DEBUG_FLAGS := -monitor stdio -d int -M smm=off -no-shutdown -no-reboot -m 512
+
+# general flags for running
+GEN_Q_FLAGS := -debugcon stdio -m 512
+
+qemu: bin/abos.img
+	$(EMU) $(GEN_Q_FLAGS) -fda $^
+
+qemu-debug: bin/abos.img
+	$(EMU) $(DEBUG_FLAGS) -fda $^
