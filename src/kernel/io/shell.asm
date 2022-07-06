@@ -113,14 +113,12 @@ invoke_read3rd:
 		cmp si, 128
 		je shell
 		jne .Loop
-
 	ret
 
 ;; data
 help0: db `AbOS Help\r\nhelp --> This command\r\ncls  --> clear screen\r\nedit --> editor\r\nread --> read sector 3\r\n`, 0
 
 %include "apps/editor.asm" ;; applications to be executed
-
 
 buffer: times 128 db 0
 cleared: times 128 db 0
