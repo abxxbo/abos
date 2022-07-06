@@ -16,6 +16,10 @@ As of early July, abos does not support VESA. Soon (hopefully in less than a mon
 VESA will be implemented. This will allow it to run on real hardware, since no
 modern hardware today actually comes with a VGA driver, rather, "a VESA driver".
 
+## KAb
+KAb is the scripting language written for AbOS. The spec is located
+[here](./lang/spec.txt).
+
 ## Releases
 If you want to get the most stable version of AbOS, you can check the releases
 tab. Each release contains:
