@@ -3,8 +3,6 @@
 mov ax, 0xb800
 mov es, ax
 
-call find_main_selector
-
 call shell
 jmp $
 foo:  db "syscall->0x0f", 0

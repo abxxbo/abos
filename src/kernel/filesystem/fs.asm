@@ -10,7 +10,7 @@
 ;;	%3 -> data buffer 
 %macro read_sector 3
 	mov ah, 0x02
-	mov dl, 0x80
+	mov dl, 0x00
 	mov ch, 0x00
 	mov dh, 0x00
 	mov al, %1
@@ -52,7 +52,6 @@
 
 	;; if there are any errors we can check in a different label
 	jc failed_op
-	ret
 %endmacro
 
 

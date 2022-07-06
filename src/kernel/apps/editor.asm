@@ -75,6 +75,7 @@ exit_screen:
 		get_char
 		mov cl, al
 		cmp cl, 13
+		printc cl
 		je .Exit
 		jne .Loop
 	.Exit:
@@ -112,10 +113,21 @@ exit_screen:
 ;; instead of using a shitty implementation
 ;; we invoke the fs implementation i wrote
 invoke_write3rd:
-	write_sector 1, 3, editor_buffer
-	call shell	;; go back to shell i guess
+	mov ah, 0x03
+	mov dl, 0x00
+	mov ch, 0x00
+	mov dh, 0x00
+	mov al, 1
+	mov cl, 3
 
-; 
+	push bx
+	xor bx, bx
+	mov es, bx
+	pop bx
+	mov bx, editor_buffer
+	int 0x13
+	
+	jmp shell	;; go back to shell i guess
 
 set_colors:
 	mov al, 0x03
