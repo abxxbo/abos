@@ -4,6 +4,11 @@
 	int 0x16
 %endmacro
 
+%macro write_prompt 0
+	printc `#`
+	printc ` `
+%endmacro
+
 shell:
 	get_char
 	mov cl, al
@@ -29,6 +34,8 @@ shell:
 
 		cmp [buffer], dword "read"
 		je invoke_read3rd
+
+		write_prompt
 
 		;; jump back
 		jmp shell
@@ -69,6 +76,7 @@ commands:
 		call printf
 
 		mov si, 0
+		write_prompt
 		.LoopH:
 			mov byte [buffer+si], byte 0
 			inc si
@@ -77,16 +85,6 @@ commands:
 			jne .LoopH
 		;; return
 		jmp shell
-	.Clear:
-		;; scroll window
-		mov ah, 0x07
-		mov al, 0x00
-		mov bh, 0xf
-		mov ch, 0
-		mov cl, 0
-		mov dh, 80
-		mov dl, 25
-		int 0x10
 	ret
 
 clear_scr:
@@ -95,6 +93,7 @@ clear_scr:
 	mov ah, 0
 	int 0x10
 
+	write_prompt
 	jmp shell
 
 %include "filesystem/fs.asm"
@@ -106,6 +105,7 @@ invoke_read3rd:
 	call printf
 	printc `\r`
 	printc `\n`
+	write_prompt
 	;; clear buffer
 	.Loop:
 		mov byte [buffer+si], byte 0

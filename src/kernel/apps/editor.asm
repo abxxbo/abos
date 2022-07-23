@@ -126,6 +126,16 @@ invoke_write3rd:
 	pop bx
 	mov bx, editor_buffer
 	int 0x13
+
+	;; clear the screen
+	mov al, 0x03
+	mov ah, 0
+	int 0x10
+
+	printc `#`
+	printc ` `
+	
+	xor si, si
 	
 	jmp shell	;; go back to shell i guess
 
