@@ -1,11 +1,12 @@
 [org 0x7e00]	;; Set all information to be pointed here.
 
-mov ax, 0xb800
-mov es, ax
+mov bx, welcome0
+call printf
 
 call shell
 jmp $
-foo:  db "syscall->0x0f", 0
+
+welcome0: db `Welcome to AbOS -- An experimental 16-bit OS\r\n# `, 0
 
 %include "io/output.asm"
 %include "io/shell.asm"
