@@ -13,5 +13,5 @@ int 0x10
 call shell
 jmp $
 
-%include "io/output.asm"
+%include "stdio.asm"
 %include "io/shell.asm"

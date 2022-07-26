@@ -96,7 +96,7 @@ clear_scr:
 	write_prompt
 	jmp shell
 
-%include "filesystem/fs.asm"
+%include "fs/fs.asm"
 
 invoke_read3rd:
 	read_sector 1, 3, read_buffer
@@ -118,7 +118,7 @@ invoke_read3rd:
 ;; data
 help0: db `AbOS Help\r\nhelp --> This command\r\ncls  --> clear screen\r\nedit --> editor\r\nread --> read sector 3\r\n`, 0
 
-%include "apps/editor.asm" ;; applications to be executed
+%include "utilities/editor.asm" ;; applications to be executed
 
 buffer: times 128 db 0
 cleared: times 128 db 0
