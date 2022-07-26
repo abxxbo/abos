@@ -1,10 +1,8 @@
-# Assembly options
-AS := nasm
-AS_FLAGS := -fbin 
+CC := gcc
+CFLAGS := -std=gnu99 -O2 -g
 
 # Kernel flags
 K_FLAGS  := -Isrc/kernel/ -Iinclude/
-# Bootloader flags
 B_FLAGS  := -Isrc/boot/
 
 OBJS := bin/bootsector.bin bin/kernel.bin
@@ -13,27 +11,31 @@ OBJ_DIR := bin
 B_FILE := src/boot/abos-boot.asm
 K_FILE := src/kernel/kernel.asm
 
-all: create_dir os
+all: create_dir os fat_tool
 .PHONY: all
 
 create_dir:
 	@mkdir -p $(OBJ_DIR)
 
-sh := $(SHELL) -e
-t:
-	@echo $(sh)
-
 os:
-	@$(AS) $(AS_FLAGS) $(B_FLAGS) $(B_FILE) -o $(OBJ_DIR)/bootsector.bin
-	@if [ "`$(AS) $(AS_FLAGS) $(K_FLAGS) $(K_FILE) -o $(OBJ_DIR)/kernel.bin`" != "" ]; then \
-		echo No warnings/errors generated.; \
-	else \
-		printf "\033[0;31m==> Warnings/errors generated.$(shell tput init)\n"; \
-	fi
-	@cat $(OBJS) > $(OBJ_DIR)/abos.img
+	nasm -fbin $(B_FLAGS) src/boot/abos-boot.asm -o bin/bootsector.bin
+	nasm -fbin $(K_FLAGS) src/kernel/kernel.asm -o bin/kernel.bin
+
+
+	dd if=/dev/zero of=$(OBJ_DIR)/abos.img bs=512 count=2880
+	mkfs.fat -F 12 -n "ABOS" $(OBJ_DIR)/abos.img
+	dd if=$(OBJ_DIR)/bootsector.bin of=$(OBJ_DIR)/abos.img conv=notrunc
+
+	mcopy -i $(OBJ_DIR)/abos.img $(OBJ_DIR)/kernel.bin "::kernel.bin"
+	cat test.txt || echo "Hello, World" > test.txt
+	mcopy -i $(OBJ_DIR)/abos.img test.txt "::test.txt"
+
+
+fat_tool: src/tools/fat.c
+	$(CC) $^ $(CFLAGS) -o ./bin/fat_tool
 
 clean:
-	@rm -rf $(OBJ_DIR)
+	@rm -rf $(OBJ_DIR) test.txt
 
 
 # Debugging / Emulator
