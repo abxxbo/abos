@@ -52,6 +52,9 @@ shell:
 		mov bl, dh
 		dec ch
 
+		cmp dl, 3
+		jl shell
+
 		;; move cursor
 		mov ah, 0x02
 		mov bh, 0
