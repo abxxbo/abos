@@ -3,7 +3,7 @@ AS := nasm
 AS_FLAGS := -fbin 
 
 # Kernel flags
-K_FLAGS  := -Isrc/kernel/ -Ilang/
+K_FLAGS  := -Isrc/kernel/ -Iinclude/
 # Bootloader flags
 B_FLAGS  := -Isrc/boot/
 
