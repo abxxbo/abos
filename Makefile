@@ -1,8 +1,10 @@
-CC := gcc
-CFLAGS := -std=gnu99 -O2 -g
+# Assembly options
+AS := nasm
+AS_FLAGS := -fbin 
 
 # Kernel flags
-K_FLAGS  := -Isrc/kernel/ -Iinclude/
+K_FLAGS  := -Isrc/kernel/ -Ilang/
+# Bootloader flags
 B_FLAGS  := -Isrc/boot/
 
 OBJS := bin/bootsector.bin bin/kernel.bin
@@ -11,40 +13,25 @@ OBJ_DIR := bin
 B_FILE := src/boot/abos-boot.asm
 K_FILE := src/kernel/kernel.asm
 
-all: create_dir os fat_tool
+all: create_dir os
 .PHONY: all
 
 create_dir:
-	@mkdir -p $(OBJ_DIR)
+	mkdir -p $(OBJ_DIR)
 
 os:
-	nasm -fbin $(B_FLAGS) src/boot/abos-boot.asm -o bin/bootsector.bin
-	nasm -fbin $(K_FLAGS) src/kernel/kernel.asm -o bin/kernel.bin
-
-
-	dd if=/dev/zero of=$(OBJ_DIR)/abos.img bs=512 count=2880
-	mkfs.fat -F 12 -n "ABOS" $(OBJ_DIR)/abos.img
-	dd if=$(OBJ_DIR)/bootsector.bin of=$(OBJ_DIR)/abos.img conv=notrunc
-
-	mcopy -i $(OBJ_DIR)/abos.img $(OBJ_DIR)/kernel.bin "::kernel.bin"
-	cat test.txt || echo "Hello, World" > test.txt
-	mcopy -i $(OBJ_DIR)/abos.img test.txt "::test.txt"
-
-
-fat_tool: src/tools/fat.c
-	$(CC) $^ $(CFLAGS) -o ./bin/fat_tool
-
-clean:
-	@rm -rf $(OBJ_DIR) test.txt
-
+	@$(AS) $(AS_FLAGS) $(B_FLAGS) $(B_FILE) -o $(OBJ_DIR)/bootsector.bin
+	@$(AS) $(AS_FLAGS) $(K_FLAGS) $(K_FILE) -o $(OBJ_DIR)/kernel.bin
+	@cat $(OBJS) > $(OBJ_DIR)/abos.img
 
 # Debugging / Emulator
 EMU := qemu-system-x86_64
+
 DEBUG_FLAGS := -monitor stdio -d int -M smm=off -no-shutdown -no-reboot -m 512
-GEN_Q_FLAGS := -debugcon stdio
+GEN_Q_FLAGS := -debugcon stdio -m 512
 
 qemu: bin/abos.img
-	@$(EMU) $(GEN_Q_FLAGS) -fda $^
+	$(EMU) $(GEN_Q_FLAGS) -fda $^
 
 qemu-debug: bin/abos.img
-	@$(EMU) $(DEBUG_FLAGS) -fda $^
+	$(EMU) $(DEBUG_FLAGS) -fda $^
