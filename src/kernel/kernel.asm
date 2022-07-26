@@ -14,4 +14,4 @@ call shell
 jmp $
 
 %include "stdio.asm"
-%include "io/shell.asm"
+%include "shell.asm"
